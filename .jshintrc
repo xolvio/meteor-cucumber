@@ -21,6 +21,7 @@
   "globals": {
     "process": false,
     "Meteor": false,
+    "Assets": false,
     "Deps": false,
     "DDP": false,
     "check": false,

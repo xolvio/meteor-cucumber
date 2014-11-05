@@ -103,6 +103,7 @@
           //   "status": "passed" // "pending" // "skipped" // "failed"
           // },
           // "match": {}
+          console.log(step.result);
         });
       });
     });
