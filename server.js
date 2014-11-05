@@ -2,15 +2,47 @@
 
   'use strict';
 
+  if (process.env.NODE_ENV !== 'development' ||
+    process.env.IS_MIRROR) {
+    return;
+  }
+
+  var path = Npm.require('path'),
+      FRAMEWORK_NAME = 'cucumber',
+      featuresPath = path.join(Velocity.getTestsPath(), FRAMEWORK_NAME, 'features');
+
+  if (Velocity && Velocity.registerTestingFramework) {
+    Velocity.registerTestingFramework(FRAMEWORK_NAME, {
+      regex: FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
+      sampleTestGenerator: function () {
+        return [{
+          path: path.join(featuresPath, 'sample.feature'),
+          contents: Assets.getText(path.join('sample-tests', 'sample-feature.feature'))
+        }, {
+          path: path.join(featuresPath, 'step_definitions', 'sample-steps.js'),
+          contents: Assets.getText(path.join('sample-tests', 'sample-feature-steps.js'))
+        }, {
+          path: path.join(featuresPath, 'support', 'actions.js'),
+          contents: Assets.getText(path.join('sample-tests', 'actions.js'))
+        }, {
+          path: path.join(featuresPath, 'support', 'hook.js'),
+          contents: Assets.getText(path.join('sample-tests', 'hooks.js'))
+        }, {
+          path: path.join(featuresPath, 'support', 'world.js'),
+          contents: Assets.getText(path.join('sample-tests', 'world.js'))
+        }];
+      }
+    });
+  }
+
   var cucumber = Npm.require('cucumber'),
       _ = Npm.require('lodash');
 
   var options = {
-    // this is how we'll run for only changed test files
-    files: ['/Users/sam/WebstormProjects/meteor-testing/velocity-example/tests/cucumber/features'],
-//    steps: 'path/to/step_definitions',
+    files: [featuresPath],
+    //steps: path.join(featuresPath, 'step_definitions'),
     tags: [],
-    format: 'pretty' //  'progress'
+    format: 'progress' // 'summary' 'json' 'pretty' 'progress'
   };
 
   var execOptions = ['node', 'node_modules/.bin/cucumber-js'];
@@ -39,14 +71,62 @@
 
   var formatter = new cucumber.Listener.JsonFormatter();
   formatter.log = function (results) {
-    // this is what we'll report from
-    console.log(JSON.parse(results));
+
+    console.log(results);
+
+    var features = JSON.parse(results);
+
+    _.each(features, function (feature) {
+      // TODO parse the feature data
+      // "id": "Player-score-can-be-increased-manually",
+      // "name": "Player score can be increased manually",
+      // "description": "\nAs a score keeper in some hypothetical game\nI want to manually give a player five points\nSo that I can publicly display an up-to-date scoreboard",
+      // "line": 1,
+      // "keyword": "Feature",
+      // "uri": "/Users/sam/WebstormProjects/meteor-testing/velocity-examples/leaderboard-cucumber/tests/cucumber/features/leaderboard.feature"
+      _.each(feature.elements, function (element) {
+        // TODO parse the element data
+        // "name": "Give 5 points to a player",
+        // "id": "Player-score-can-be-increased-manually;give-5-points-to-a-player",
+        // "line": 7,
+        // "keyword": "Scenario",
+        // "description": "",
+        // "type": "scenario",
+        _.each(element.steps, function (step) {
+          // TODO parse the step data
+          // "name": "I authenticate",
+          // "line": 8,
+          // "keyword": "Given ",
+          // "result": {
+          //   "error_message": "WHAT THE...", << only on failure
+          //   "duration": 174721,
+          //   "status": "passed" // "pending" // "skipped" // "failed"
+          // },
+          // "match": {}
+        });
+      });
+    });
+
+    //Meteor.call('velocity/reports/submit', {
+    //name: '',
+    //framework: 'cucumber',
+    //result: String,
+    //id: Match.Optional(String),
+    //ancestors: Match.Optional([String]),
+    //timestamp: Match.Optional(Match.OneOf(Date, String)),
+    //duration: Match.Optional(Number),
+    //browser: Match.Optional(String),
+    //failureType: Match.Optional(String),
+    //failureMessage: Match.Optional(String),
+    //failureStackTrace: Match.Optional(Match.Any)
+    //});
   };
 
   runtime.attachListener(formatter);
   runtime.attachListener(configuration.getFormatter());
 
-  runtime.start(function () {
-    console.log('Tell Velocity we are done');
-  });
+  runtime.start(Meteor.bindEnvironment(function () {
+    Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
+  }));
+
 })();
