@@ -8,8 +8,15 @@
   }
 
   var path = Npm.require('path'),
+      fs = Npm.require('fs'),
       FRAMEWORK_NAME = 'cucumber',
       featuresPath = path.join(Velocity.getTestsPath(), FRAMEWORK_NAME, 'features');
+
+  if (!fs.existsSync(featuresPath)) {
+    console.log("WARNING: cucumber/features path is missing. Please make sure you have the path './tests/cucumber/features'. As such, cucumber was not started and no tests will run.");
+    // TODO: May want to create the paths if they don't exist.
+    return;
+  }
 
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
