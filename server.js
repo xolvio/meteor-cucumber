@@ -45,15 +45,20 @@
     var cucumberTestsCursor = VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME});
     // FIXME this should wait for the first round of file additions before it starts
     cucumberTestsCursor.observe({
-      //added: rerunCucumber,
-      //removed: rerunCucumber,
+      added: _rerunCucumber,
+      removed: _rerunCucumber,
       changed: _rerunCucumber
     });
   });
 
+  var _isRunning = false;
   var _rerunCucumber = function (file) {
 
-    console.log('- - - - -  ADD/REMOVE/CHANGE DETECTED', file.relativePath);
+    if (_isRunning) {
+      return;
+    }
+    _isRunning = true;
+
     delete Module._cache[file.absolutePath];
 
     var cucumber = Npm.require('cucumber');
@@ -75,7 +80,9 @@
     runtime.attachListener(configuration.getFormatter());
 
     runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
-      Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
+      Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
+        _isRunning = false;
+      });
     }));
   };
 
@@ -109,19 +116,19 @@
       report.duration = step.result.duration;
     }
     if (step.result.error_message) {
+      //console.log(step);
       if (step.result.error_message.name) {
         report.failureType = step.result.error_message.name;
-        report.failureMessage = step.result.error_message.message;
+        // TODO extract message
+        //report.failureMessage = step.result.error_message.message;
+        // TODO extract problem
+        // TODO extract callstack
+        report.failureStackTrace = step.result.error_message.message;
       } else {
-        report.failureMessage = step.result.error_message;
+        report.failureStackTrace = step.result.error_message;
       }
     }
-    console.log('\n', step.keyword + ' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ');
-    //console.log(JSON.stringify(report));
-    console.log(report.id, report.result);
-    Meteor.call('velocity/reports/submit', report, function (e, r) {
-      console.log('velocity/reports/submit response', e, r);
-    });
+    Meteor.call('velocity/reports/submit', report);
 
     // Unused:
     // failureStackTrace
