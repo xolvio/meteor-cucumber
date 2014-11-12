@@ -1,3 +1,9 @@
+/*jshint -W020 */
+
+cucumber = {
+  isRunning: false
+};
+
 (function () {
 
   'use strict';
@@ -40,32 +46,42 @@
       Module = Npm.require('module');
 
   Meteor.startup(function () {
-    var cucumberTestsCursor = VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME});
-    // FIXME this should wait for the first round of file additions before it starts
-    cucumberTestsCursor.observe({
-      added: _rerunCucumber,
-      removed: _rerunCucumber,
-      changed: _rerunCucumber
+
+    var requestId = Meteor.call('velocity/mirrors/request', {
+      framework: 'cucumber'
     });
+
+    console.log('[cucumber] Waiting for Velocity to start the mirror');
+    VelocityMirrors.find({requestId: requestId}).observe({
+      added: function (mirror) {
+        console.log('[cucumber] Mirror started. Watching files...');
+        cucumber.mirror = mirror;
+        VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
+          added: _rerunCucumber,
+          removed: _rerunCucumber,
+          changed: _rerunCucumber
+        });
+      }
+    });
+
   });
 
-  var _isRunning = false;
   var _rerunCucumber = function (file) {
 
-    if (_isRunning) {
+    if (cucumber.isRunning) {
       return;
     }
-    _isRunning = true;
+    cucumber.isRunning = true;
 
     delete Module._cache[file.absolutePath];
 
-    var cucumber = Npm.require('cucumber');
+    var cuke = Npm.require('cucumber');
 
     var execOptions = _getExecOptions();
-    var configuration = cucumber.Cli.Configuration(execOptions),
-        runtime = cucumber.Runtime(configuration);
+    var configuration = cuke.Cli.Configuration(execOptions),
+        runtime = cuke.Runtime(configuration);
 
-    var formatter = new cucumber.Listener.JsonFormatter();
+    var formatter = new cuke.Listener.JsonFormatter();
     formatter.log = Meteor.bindEnvironment(function (results) {
 
       Meteor.call('velocity/reports/reset', {framework: FRAMEWORK_NAME}, function () {
@@ -79,7 +95,7 @@
 
     runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
       Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
-        _isRunning = false;
+        cucumber.isRunning = false;
       });
     }));
   };
@@ -112,10 +128,9 @@
       ancestors: [element.name, feature.name]
     };
     if (step.result.duration) {
-      report.duration = step.result.duration;
+      report.duration = Math.round(step.result.duration / 1000000);
     }
     if (step.result.error_message) {
-      //console.log(step);
       if (step.result.error_message.name) {
         report.failureType = step.result.error_message.name;
         // TODO extract message
@@ -134,16 +149,14 @@
     }
 
     Meteor.call('velocity/reports/submit', report);
-
-    // Unused:
-    // failureStackTrace
+    // Unused fields:
     // browser
     // timestamp
   }
 
   function _getExecOptions () {
 
-
+    // TODO externalize these options
     var options = {
       files: [featuresPath],
       //steps: path.join(featuresPath, 'step_definitions'),

@@ -31,7 +31,9 @@
     "Velocity": false,
     "VelocityTestFiles": false,
     "VelocityTestReports": false,
+    "VelocityMirrors": false,
     "VelocityAggregateReports": false,
-    "VelocityLogs": false
+    "VelocityLogs": false,
+    "cucumber": false
   }
 }

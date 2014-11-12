@@ -126,11 +126,11 @@
     ],
     [
       "velocity:core",
-      "1.0.0-rc.1"
+      "1.0.0-rc.2"
     ],
     [
       "velocity:html-reporter",
-      "0.3.0-rc.1"
+      "0.3.0-rc.3"
     ],
     [
       "velocity:shim",
