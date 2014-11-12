@@ -10,7 +10,8 @@
   var path = Npm.require('path'),
       FRAMEWORK_NAME = 'cucumber',
       FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
-      featuresPath = path.join(Velocity.getTestsPath(), FRAMEWORK_NAME, 'features');
+      featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
+      featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
 
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
@@ -21,19 +22,16 @@
 
   function _getSampleTestFiles () {
     return [{
-      path: path.join(featuresPath, 'sample.feature'),
-      contents: Assets.getText(path.join('sample-tests', 'sample-feature.feature'))
+      path: path.join(featuresRelativePath, 'basket.feature'),
+      contents: Assets.getText(path.join('sample-tests', 'feature.feature'))
     }, {
-      path: path.join(featuresPath, 'step_definitions', 'sample-steps.js'),
-      contents: Assets.getText(path.join('sample-tests', 'sample-feature-steps.js'))
-    }, {
-      path: path.join(featuresPath, 'support', 'actions.js'),
-      contents: Assets.getText(path.join('sample-tests', 'actions.js'))
-    }, {
-      path: path.join(featuresPath, 'support', 'hook.js'),
+      path: path.join(featuresRelativePath, 'support', 'hooks.js'),
       contents: Assets.getText(path.join('sample-tests', 'hooks.js'))
     }, {
-      path: path.join(featuresPath, 'support', 'world.js'),
+      path: path.join(featuresRelativePath, 'step_definitions', 'basketSteps.js'),
+      contents: Assets.getText(path.join('sample-tests', 'steps.js'))
+    }, {
+      path: path.join(featuresRelativePath, 'support', 'world.js'),
       contents: Assets.getText(path.join('sample-tests', 'world.js'))
     }];
   }
@@ -105,6 +103,7 @@
   }
 
   function _processStep (element, step, feature) {
+
     var report = {
       id: element.id + step.keyword + step.name,
       framework: FRAMEWORK_NAME,
@@ -128,6 +127,12 @@
         report.failureStackTrace = step.result.error_message;
       }
     }
+
+    // skip before/after if they have no errors
+    if (!report.failureStackTrace && (step.keyword.trim() === 'Before' || step.keyword.trim() === 'After')) {
+      return;
+    }
+
     Meteor.call('velocity/reports/submit', report);
 
     // Unused:
