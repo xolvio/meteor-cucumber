@@ -54,7 +54,7 @@ cucumber = {
     console.log('[cucumber] Waiting for Velocity to start the mirror');
     VelocityMirrors.find({requestId: requestId}).observe({
       added: function (mirror) {
-        console.log('[cucumber] Mirror started. Watching files...');
+        console.log('[cucumber] Notified of mirror start. Watching files...');
         cucumber.mirror = mirror;
         VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
           added: _rerunCucumber,

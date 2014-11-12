@@ -1,3 +1,6 @@
+#0.0.4
+Using Velocity RC3
+
 #0.0.3
 Now works with a mirror
 
