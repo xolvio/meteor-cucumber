@@ -1,4 +1,8 @@
 #0.0.6
+* Uses new soft mirror
+* Runs steps in fibers (Auto wraps step definition callbacks with Meteor.bindEnvironment)
+
+#0.0.6
 Bumping to velocity 1.0.0-rc4
 
 #0.0.5

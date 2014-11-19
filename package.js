@@ -5,7 +5,7 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.0.6',
+    version: '0.0.7',
     git: 'git@github.com:xolvio/meteor-cucumber.git',
     debugOnly: true
   });
@@ -16,10 +16,11 @@
   });
 
   Package.onUse(function (api) {
-    api.use([
-      'velocity:core@1.0.0-rc.4',
-      'velocity:shim@0.0.2'
-    ], 'server');
+
+    api.use(['velocity:core@1.0.0-rc.4',
+      'velocity:node-soft-mirror@0.0.2',
+      'velocity:shim@0.0.3'
+    ], ['server', 'client']);
     api.use([
       'velocity:html-reporter@0.3.0-rc.3'
     ], 'client');

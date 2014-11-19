@@ -1,8 +1,8 @@
-/*jshint -W020 */
-
 cucumber = {
   isRunning: false
 };
+
+DEBUG = !!process.env.VELOCITY_DEBUG;
 
 (function () {
 
@@ -46,27 +46,26 @@ cucumber = {
       Module = Npm.require('module');
 
   Meteor.startup(function () {
-
-    var requestId = Meteor.call('velocity/mirrors/request', {
+    var mirrorId = Meteor.call('velocity/mirrors/request', {
       framework: 'cucumber'
     });
-
     console.log('[cucumber] Waiting for Velocity to start the mirror');
-    VelocityMirrors.find({requestId: requestId}).observe({
-      added: function (mirror) {
-        console.log('[cucumber] Notified of mirror start. Watching files...');
-        cucumber.mirror = mirror;
-        VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
-          added: _rerunCucumber,
-          removed: _rerunCucumber,
-          changed: _rerunCucumber
-        });
-      }
+    var init = function (mirror) {
+      console.log('[cucumber] Mirror started. Watching test files.');
+      cucumber.mirror = mirror;
+      VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
+        added: _rerunCucumber,
+        removed: _rerunCucumber,
+        changed: _rerunCucumber
+      });
+    };
+    VelocityMirrors.find({_id: mirrorId, state: 'ready'}).observe({
+      added: init,
+      changed: init
     });
-
   });
 
-  var _rerunCucumber = function (file) {
+  function _rerunCucumber (file) {
 
     if (cucumber.isRunning) {
       return;
@@ -90,6 +89,8 @@ cucumber = {
       });
     });
 
+    _patchHelpers(cuke, execOptions, configuration);
+
     runtime.attachListener(formatter);
     runtime.attachListener(configuration.getFormatter());
 
@@ -98,7 +99,63 @@ cucumber = {
         cucumber.isRunning = false;
       });
     }));
-  };
+  }
+
+  function _patchHelpers (cuke, execOptions, configuration) {
+    // taken from https://github.com/xdissent/meteor-cucumber/blob/master/src/runner/local.coffee
+    var argumentParser = cuke.Cli.ArgumentParser(execOptions);
+    argumentParser.parse();
+    configuration.getSupportCodeLibrary = function () {
+      var supportCodeFilePaths, supportCodeLoader;
+      supportCodeFilePaths = argumentParser.getSupportCodeFilePaths();
+      supportCodeLoader = cuke.Cli.SupportCodeLoader(supportCodeFilePaths);
+      supportCodeLoader._buildSupportCodeInitializerFromPaths = supportCodeLoader.buildSupportCodeInitializerFromPaths;
+      supportCodeLoader.buildSupportCodeInitializerFromPaths = function (paths) {
+        var wrapper = supportCodeLoader._buildSupportCodeInitializerFromPaths(paths);
+        return function () {
+          _patchHelper(this);
+          return wrapper.call(this);
+        };
+      };
+      return supportCodeLoader.getSupportCodeLibrary();
+    };
+  }
+
+  function _patchHelper (helper) {
+
+    if (helper._patched != null) {
+      return;
+    }
+    helper._patched = true;
+
+    var steps = [
+      'World',
+      'Around', 'Before', 'After',
+      'defineStep',
+      'BeforeStep', 'AfterStep',
+      'BeforeScenario', 'AfterScenario',
+      'BeforeFeature', 'AfterFeature',
+      'BeforeFeatures', 'AfterFeatures'];
+    _.each(steps, function (step) {
+      DEBUG && console.log('[cucumber] Patching', step);
+      helper['_' + step] = helper[step];
+      helper[step] = function () {
+        var args = Array.prototype.splice.call(arguments, 0);
+        var callback = args.pop();
+        args.push(Meteor.bindEnvironment(callback));
+        helper['_' + step].apply(helper, args);
+      }
+    });
+    // Given, When, Then
+    helper.Given = helper.When = helper.Then = helper.defineStep;
+
+    // What about these?
+    // registerListener
+    // registerHandler
+    // StepResult
+    // Background
+
+  }
 
   function _processFeatures (features) {
     _.each(features, function (feature) {
