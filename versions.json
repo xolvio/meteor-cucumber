@@ -118,7 +118,7 @@
     ],
     [
       "velocity:core",
-      "1.0.0-rc.6"
+      "1.0.0-rc.6-cucumber"
     ],
     [
       "velocity:html-reporter",
@@ -126,7 +126,7 @@
     ],
     [
       "velocity:node-soft-mirror",
-      "0.0.1"
+      "0.0.3-cucumber"
     ],
     [
       "velocity:shim",
@@ -134,7 +134,7 @@
     ],
     [
       "velocity:test-proxy",
-      "0.0.1"
+      "0.0.4"
     ]
   ],
   "pluginDependencies": [],
