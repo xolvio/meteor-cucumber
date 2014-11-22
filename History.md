@@ -1,8 +1,5 @@
-#0.0.8
-* Bumping mirror and velocity versions
-
-#0.0.7
-* Bumping mirror version
+#0.0.7-0.0.11
+* Bumping versions
 
 #0.0.6
 * Uses new soft mirror

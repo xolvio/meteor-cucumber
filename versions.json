@@ -118,7 +118,7 @@
     ],
     [
       "velocity:core",
-      "1.0.0-rc.6-cucumber"
+      "1.0.0-rc.8"
     ],
     [
       "velocity:html-reporter",
@@ -126,7 +126,7 @@
     ],
     [
       "velocity:node-soft-mirror",
-      "0.0.3-cucumber"
+      "0.0.8"
     ],
     [
       "velocity:shim",
