@@ -118,15 +118,15 @@
     ],
     [
       "velocity:core",
-      "1.0.0-rc.8"
+      "0.4.1"
     ],
     [
       "velocity:html-reporter",
-      "0.3.0-rc.3"
+      "0.3.1"
     ],
     [
       "velocity:node-soft-mirror",
-      "0.0.8"
+      "0.0.9"
     ],
     [
       "velocity:shim",
