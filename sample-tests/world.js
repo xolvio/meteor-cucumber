@@ -4,13 +4,9 @@
 
   module.exports = function () {
 
-    var library = this;
+    var helper = this;
 
-    library.World = function (next) {
-
-      // when doing any Meteor.bindEnvironment the world is no longer attached to 'this'
-      // so we keep the world instance on the cucumber library scope
-      library.world = this;
+    helper.World = function (next) {
 
       next();
 

@@ -1,6 +1,4 @@
-cucumber = {
-  isRunning: false
-};
+cucumber = {};
 
 DEBUG = !!process.env.VELOCITY_DEBUG;
 
@@ -54,9 +52,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       console.log('[cucumber] Mirror started. Watching test files.');
       cucumber.mirror = mirror;
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
-        added: _rerunCucumber,
-        removed: _rerunCucumber,
-        changed: _rerunCucumber
+        added: _.debounce(Meteor.bindEnvironment(_rerunCucumber)),
+        removed: _.debounce(Meteor.bindEnvironment(_rerunCucumber)),
+        changed: _.debounce(Meteor.bindEnvironment(_rerunCucumber))
       });
     };
     VelocityMirrors.find({_id: mirrorId, state: 'ready'}).observe({
@@ -67,10 +65,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _rerunCucumber (file) {
 
-    if (cucumber.isRunning) {
-      return;
-    }
-    cucumber.isRunning = true;
+    DEBUG && console.log('[cucumber] Rerunning cucumber');
 
     delete Module._cache[file.absolutePath];
 
@@ -96,7 +91,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
       Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
-        cucumber.isRunning = false;
+        DEBUG && console.log('[cucumber] Completed');
       });
     }));
   }

@@ -1,4 +1,9 @@
-#0.0.7-0.0.11
+#0.0.13
+
+* Improved de-bouncing
+* Updated sample tests
+
+#0.0.7-0.0.12
 * Bumping versions
 
 #0.0.6

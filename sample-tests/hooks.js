@@ -4,14 +4,14 @@
 
   module.exports = function () {
 
-    var library = this;
+    var helper = this;
 
-    library.Before(function (next) {
-      next();
+    helper.Before(function () {
+      arguments[arguments.length-1]();
     });
 
-    library.After(function (next) {
-      next();
+    helper.After(function () {
+      arguments[arguments.length-1]();
     });
 
   };
