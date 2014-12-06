@@ -1,3 +1,9 @@
+#0.1.0
+
+* Actually using semvar now!
+* Bumped velocity
+* Logging now includes full package name
+
 #0.0.13
 
 * Improved de-bouncing
