@@ -18,7 +18,7 @@
   Package.onUse(function (api) {
 
     api.use([
-      'velocity:core@0.4.1',
+      'velocity:core@0.4.2',
       'velocity:node-soft-mirror@0.0.9',
       'velocity:shim@0.0.3'
     ], ['server', 'client']);

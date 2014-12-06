@@ -19,8 +19,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
 
   if (!fs.existsSync(featuresPath)) {
-    console.log("WARNING: cucumber/features path is missing. Please make sure you have the path './tests/cucumber/features'. As such, cucumber was not started and no tests will run.");
-    // TODO: May want to create the paths if they don't exist.
+    console.log('WARNING: cucumber/features directory is missing. Please make sure you have the path "./tests/cucumber/features". As such, cucumber was not started and no tests will run.');
     return;
   }
 
@@ -54,9 +53,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     var mirrorId = Meteor.call('velocity/mirrors/request', {
       framework: 'cucumber'
     });
-    console.log('[cucumber] Waiting for Velocity to start the mirror');
+    console.log('[xolvio:cucumber] Waiting for Velocity to start the mirror');
     var init = function (mirror) {
-      console.log('[cucumber] Mirror started. Watching test files.');
+      console.log('[xolvio:cucumber] Mirror started. Watching test files.');
       cucumber.mirror = mirror;
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
         added: _.debounce(Meteor.bindEnvironment(_rerunCucumber)),
@@ -72,7 +71,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _rerunCucumber (file) {
 
-    DEBUG && console.log('[cucumber] Rerunning cucumber');
+    DEBUG && console.log('[xolvio:cucumber] Rerunning cucumber');
 
     delete Module._cache[file.absolutePath];
 
@@ -98,7 +97,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
       Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
-        DEBUG && console.log('[cucumber] Completed');
+        DEBUG && console.log('[xolvio:cucumber] Completed');
       });
     }));
   }
@@ -139,7 +138,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       'BeforeFeature', 'AfterFeature',
       'BeforeFeatures', 'AfterFeatures'];
     _.each(steps, function (step) {
-      DEBUG && console.log('[cucumber] Patching', step);
+      DEBUG && console.log('[xolvio:cucumber] Patching', step);
       helper['_' + step] = helper[step];
       helper[step] = function () {
         var args = Array.prototype.splice.call(arguments, 0);
