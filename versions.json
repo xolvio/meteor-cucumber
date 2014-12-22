@@ -29,8 +29,12 @@
       "1.0.2"
     ],
     [
+      "coffeescript",
+      "1.0.4"
+    ],
+    [
       "ddp",
-      "1.0.11"
+      "1.0.12"
     ],
     [
       "deps",
@@ -82,7 +86,7 @@
     ],
     [
       "mongo",
-      "1.0.8"
+      "1.0.9"
     ],
     [
       "observe-sequence",
@@ -91,6 +95,14 @@
     [
       "ordered-dict",
       "1.0.1"
+    ],
+    [
+      "practicalmeteor:chai",
+      "1.9.2_3"
+    ],
+    [
+      "practicalmeteor:loglevel",
+      "1.1.0_3"
     ],
     [
       "random",
@@ -118,7 +130,7 @@
     ],
     [
       "velocity:core",
-      "0.4.2"
+      "0.4.5"
     ],
     [
       "velocity:html-reporter",
@@ -126,11 +138,11 @@
     ],
     [
       "velocity:node-soft-mirror",
-      "0.0.9"
+      "0.2.4"
     ],
     [
       "velocity:shim",
-      "0.0.3"
+      "0.1.0"
     ],
     [
       "velocity:test-proxy",
@@ -138,6 +150,6 @@
     ]
   ],
   "pluginDependencies": [],
-  "toolVersion": "meteor-tool@1.0.35",
+  "toolVersion": "meteor-tool@1.0.36",
   "format": "1.0"
 }

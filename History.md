@@ -1,3 +1,9 @@
+#0.1.1
+
+* Fixed issue with mirror starting
+* Improved logging
+* Swapped lodash to underscore 
+
 #0.1.0
 
 * Actually using semvar now!

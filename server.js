@@ -46,24 +46,21 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }];
   }
 
-  var _ = Npm.require('lodash'),
-      Module = Npm.require('module');
+  var Module = Npm.require('module');
 
   Meteor.startup(function () {
-    var mirrorId = Meteor.call('velocity/mirrors/request', {
+    Meteor.call('velocity/mirrors/request', {
       framework: 'cucumber'
     });
-    console.log('[xolvio:cucumber] Waiting for Velocity to start the mirror');
     var init = function (mirror) {
-      console.log('[xolvio:cucumber] Mirror started. Watching test files.');
       cucumber.mirror = mirror;
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
-        added: _.debounce(Meteor.bindEnvironment(_rerunCucumber)),
-        removed: _.debounce(Meteor.bindEnvironment(_rerunCucumber)),
-        changed: _.debounce(Meteor.bindEnvironment(_rerunCucumber))
+        added: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300),
+        removed: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300),
+        changed: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300)
       });
     };
-    VelocityMirrors.find({_id: mirrorId, state: 'ready'}).observe({
+    VelocityMirrors.find({framework: 'cucumber', state: 'ready'}).observe({
       added: init,
       changed: init
     });
@@ -71,7 +68,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _rerunCucumber (file) {
 
-    DEBUG && console.log('[xolvio:cucumber] Rerunning cucumber');
+    console.log('[xolvio:cucumber] Cucumber is running');
 
     delete Module._cache[file.absolutePath];
 
