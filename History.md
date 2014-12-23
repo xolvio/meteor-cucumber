@@ -1,8 +1,15 @@
-#0.2.0
+#0.3.0
+
+* Includes HTTP package for testing restful E2E calls
+
+#0.2.4
 
 * Now includes webdriver by default
-* Includes HTTP package for testing restful E2E calls
 * Example world sets up Webdriver
+
+#0.2.0 - 0.2.3
+
+* Void (connection issues messed up build on package server)
 
 #0.1.1
 
