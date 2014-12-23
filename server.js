@@ -18,11 +18,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
       featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
 
-  if (!fs.existsSync(featuresPath)) {
-    console.log('WARNING: cucumber/features directory is missing. Please make sure you have the path "./tests/cucumber/features". As such, cucumber was not started and no tests will run.');
-    return;
-  }
-
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
       regex: FRAMEWORK_REGEX,
@@ -30,15 +25,19 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   }
 
+  if (!fs.existsSync(featuresPath)) {
+    return;
+  }
+
   function _getSampleTestFiles () {
     return [{
-      path: path.join(featuresRelativePath, 'basket.feature'),
+      path: path.join(featuresRelativePath, 'sample.feature'),
       contents: Assets.getText(path.join('sample-tests', 'feature.feature'))
     }, {
       path: path.join(featuresRelativePath, 'support', 'hooks.js'),
       contents: Assets.getText(path.join('sample-tests', 'hooks.js'))
     }, {
-      path: path.join(featuresRelativePath, 'step_definitions', 'basketSteps.js'),
+      path: path.join(featuresRelativePath, 'step_definitions', 'sampleSteps.js'),
       contents: Assets.getText(path.join('sample-tests', 'steps.js'))
     }, {
       path: path.join(featuresRelativePath, 'support', 'world.js'),

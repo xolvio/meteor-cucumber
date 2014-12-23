@@ -1,8 +1,14 @@
+#0.2.0
+
+* Now includes webdriver by default
+* Includes HTTP package for testing restful E2E calls
+* Example world sets up Webdriver
+
 #0.1.1
 
 * Fixed issue with mirror starting
 * Improved logging
-* Swapped lodash to underscore 
+* Swapped lodash to underscore
 
 #0.1.0
 

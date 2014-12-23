@@ -6,12 +6,20 @@
 
     var helper = this;
 
-    helper.Before(function () {
-      arguments[arguments.length-1]();
+    this.Before(function () {
+      var world = helper.world;
+      var next = arguments[arguments.length - 1];
+      world.browser.
+        init().
+        call(next);
     });
 
-    helper.After(function () {
-      arguments[arguments.length-1]();
+    this.After(function () {
+      var world = helper.world;
+      var next = arguments[arguments.length - 1];
+      world.browser.
+        end().
+        call(next);
     });
 
   };

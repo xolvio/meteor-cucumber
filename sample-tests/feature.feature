@@ -1,11 +1,14 @@
-Feature: Shopping Basket
+Feature: One-liner description of this feature
 
-  As a customer of this book store
-  I want to add items to my basket
-  So that I can purchase and receive them
+  As a [role]
+  I want [feature]
+  So that [benefit]
 
-  Scenario: User can see an order summary when they check out
-    Given I have added an item to my basket
-    When When I click checkout
-    Then I should see a summary of my order
-    And I should see a pay button
+  The story above is to set context for the reader. It doesn't actually have any impact on the test
+  itself. The phrases inside the scenarios are ties to test code using regex, which you can see in
+  /tests/features/step_definitions/steps.js
+
+  Scenario:
+    Given I am on the home page
+    When I navigate to "/a-page-that-does-not-exist"
+    Then I should see the title of "intentional failure"

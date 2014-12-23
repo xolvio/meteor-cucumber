@@ -2,30 +2,34 @@
 
   'use strict';
 
+  var assert = require('assert');
+
   module.exports = function () {
 
     var helper = this;
 
-    helper.Given(/^I have added an item to my basket/, function (callback) {
-      // Write code here that turns the phrase above into concrete actions
-      callback();
+    this.Given(/^I am on the home page$/, function (callback) {
+      helper.world.browser.
+        url(helper.world.cucumber.mirror.rootUrl).
+        call(callback);
+    });
+
+    this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
+      helper.world.browser.
+        url(helper.world.cucumber.mirror.rootUrl + relativePath).
+        call(callback);
+    });
+
+    this.Then(/^I should see the title of "([^"]*)"$/, function (expectedTitle, callback) {
+
+      helper.world.browser.
+        title(function (err, res) {
+          assert.equal(res.value, expectedTitle);
+          callback();
+        });
     });
 
 
-    helper.When(/^When I click checkout/, function (callback) {
-      // Write code here that turns the phrase above into concrete actions
-      callback();
-    });
-
-    helper.Then(/^I should see a summary of my order$/, function (callback) {
-      // Write code here that turns the phrase above into concrete actions
-      callback();
-    });
-
-    helper.Then(/^I should see a pay button$/, function (callback) {
-      // Write code here that turns the phrase above into concrete actions
-      callback();
-    });
 
   };
 
