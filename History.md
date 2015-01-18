@@ -1,3 +1,11 @@
+#0.3.4
+
+* Fixed #30 - Nasty bug that showed failures as passes!
+
+#0.3.1 - 0.3.3
+
+* Bumping HTML reporter, webdriver and mirror versions
+
 #0.3.0
 
 * Includes HTTP package for testing restful E2E calls

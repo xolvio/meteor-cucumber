@@ -7,7 +7,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   'use strict';
 
   if (process.env.NODE_ENV !== 'development' ||
-    process.env.IS_MIRROR || process.env.VELOCITY=='0') {
+    process.env.IS_MIRROR || process.env.VELOCITY == '0') {
     return;
   }
 
@@ -53,10 +53,13 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
     var init = function (mirror) {
       cucumber.mirror = mirror;
+
+      var debouncedRerunCucumber = _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300);
+
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
-        added: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300),
-        removed: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300),
-        changed: _.debounce(Meteor.bindEnvironment(_rerunCucumber), 300)
+        added: debouncedRerunCucumber,
+        removed: debouncedRerunCucumber,
+        changed: debouncedRerunCucumber
       });
     };
     VelocityMirrors.find({framework: 'cucumber', state: 'ready'}).observe({
@@ -78,13 +81,13 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         runtime = cuke.Runtime(configuration);
 
     var formatter = new cuke.Listener.JsonFormatter();
-    formatter.log = Meteor.bindEnvironment(function (results) {
+    formatter.log = _.once(Meteor.bindEnvironment(function (results) {
 
       Meteor.call('velocity/reports/reset', {framework: FRAMEWORK_NAME}, function () {
         var features = JSON.parse(results);
         _processFeatures(features);
       });
-    });
+    }));
 
     _patchHelpers(cuke, execOptions, configuration);
 
