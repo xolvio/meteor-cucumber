@@ -11,6 +11,10 @@
       var next = arguments[arguments.length - 1];
       world.browser.
         init().
+        setViewportSize({
+          width: 1280,
+          height: 1024
+        }).
         call(next);
     });
 
