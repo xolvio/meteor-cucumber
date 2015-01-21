@@ -1,3 +1,7 @@
+#0.3.6
+
+* Fixing error in sample tests
+
 #0.3.5
 
 * Added ability to disable cucumber with CUCUMBER=0 env var

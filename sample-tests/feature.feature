@@ -10,5 +10,5 @@ Feature: One-liner description of this feature
 
   Scenario:
     Given I am on the home page
-    When I navigate to "/a-page-that-does-not-exist"
+    When I navigate to "/"
     Then I should see the title of "intentional failure"
