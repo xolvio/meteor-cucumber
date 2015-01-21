@@ -1,3 +1,9 @@
+#0.3.5
+
+* Added ability to disable cucumber with CUCUMBER=0 env var
+* Simplified the example world config
+* Added a viewport sizing config in the hooks
+
 #0.3.4
 
 * Fixed #30 - Nasty bug that showed failures as passes!
