@@ -6,7 +6,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
-  if (process.env.NODE_ENV !== 'development' ||
+  if (process.env.NODE_ENV !== 'development' || process.env.CUCUMBER == '0' ||
     process.env.IS_MIRROR || process.env.VELOCITY == '0') {
     return;
   }
