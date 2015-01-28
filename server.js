@@ -104,11 +104,19 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     runtime.attachListener(formatter);
     runtime.attachListener(configuration.getFormatter());
 
-    runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
-      Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
-        DEBUG && console.log('[xolvio:cucumber] Completed');
-      });
-    }));
+    try {
+      runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
+        Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
+          DEBUG && console.log('[xolvio:cucumber] Completed');
+        });
+      }));
+    } catch(e) {
+      if (e.message === 'Cannot call method \'convertScenarioOutlinesToScenarios\' of undefined') {
+        console.error('[xolvio:cucumber]', e.message);
+        console.error('[xolvio:cucumber]', 'Do you have an empty feature file?');
+      }
+      throw new Error(e);
+    }
   }
 
   function _patchHelpers (cuke, execOptions, configuration) {
