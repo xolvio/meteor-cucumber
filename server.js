@@ -61,10 +61,18 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         removed: debouncedRerunCucumber,
         changed: debouncedRerunCucumber
       });
+
+      process.on('SIGUSR2', Meteor.bindEnvironment(function () {
+        DEBUG && console.log('[xolvio:cucumber] Client restart detected');
+        debouncedRerunCucumber();
+      }));
+
     };
+
+    var initOnce = _.once(Meteor.bindEnvironment(init));
     VelocityMirrors.find({framework: 'cucumber', state: 'ready'}).observe({
-      added: init,
-      changed: init
+      added: initOnce,
+      changed: initOnce
     });
   });
 
@@ -72,7 +80,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
-    delete Module._cache[file.absolutePath];
+    if (file) {
+      delete Module._cache[file.absolutePath];
+    }
 
     var cuke = Npm.require('cucumber');
 
