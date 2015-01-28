@@ -35,6 +35,7 @@
     "VelocityAggregateReports": false,
     "VelocityLogs": false,
     "console": false,
-    "cucumber": false
+    "cucumber": false,
+    "_": false
   }
 }

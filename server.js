@@ -1,3 +1,5 @@
+/*jshint -W030, -W020 */
+
 cucumber = {};
 
 DEBUG = !!process.env.VELOCITY_DEBUG;
@@ -6,8 +8,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
-  if (process.env.NODE_ENV !== 'development' || process.env.CUCUMBER == '0' ||
-    process.env.IS_MIRROR || process.env.VELOCITY == '0') {
+  if (process.env.NODE_ENV !== 'development' || process.env.CUCUMBER === '0' ||
+    process.env.IS_MIRROR || process.env.VELOCITY === '0') {
     return;
   }
 
@@ -141,7 +143,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _patchHelper (helper) {
 
-    if (helper._patched != null) {
+    if (helper._patched !== null) {
       return;
     }
     helper._patched = true;
@@ -162,7 +164,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         var callback = args.pop();
         args.push(Meteor.bindEnvironment(callback));
         helper['_' + step].apply(helper, args);
-      }
+      };
     });
     // Given, When, Then
     helper.Given = helper.When = helper.Then = helper.defineStep;
@@ -171,7 +173,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     // registerListener
     // registerHandler
     // StepResult
-    //
 
   }
 
