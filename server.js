@@ -147,7 +147,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     helper._patched = true;
 
     var steps = [
-      'World',
+      'World', 'Background',
       'Around', 'Before', 'After',
       'defineStep',
       'BeforeStep', 'AfterStep',
@@ -171,7 +171,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     // registerListener
     // registerHandler
     // StepResult
-    // Background
+    //
 
   }
 
@@ -194,6 +194,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   function _processStep (element, step, feature) {
+
+    // Before elements are converted to steps within scenarios, so no need to process them here
+    if (element.type === 'background') {
+      return;
+    }
 
     var report = {
       id: element.id + step.keyword + step.name,
