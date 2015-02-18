@@ -41,5 +41,5 @@ velocity:html-reporter@0.4.1
 velocity:node-soft-mirror@0.2.8
 velocity:shim@0.1.0
 velocity:test-proxy@0.0.4
-xolvio:cucumber@0.3.8
-xolvio:webdriver@0.1.8
+xolvio:cucumber@0.3.9
+xolvio:webdriver@0.2.5
