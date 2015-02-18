@@ -117,7 +117,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         console.error('[xolvio:cucumber]', e.message);
         console.error('[xolvio:cucumber]', 'Do you have an empty feature file?');
       }
-      throw new Error(e);
+      throw e;
     }
   }
 
