@@ -22,7 +22,7 @@
       'velocity:core@0.4.5',
       'velocity:node-soft-mirror@0.2.8',
       'velocity:shim@0.0.3',
-      'xolvio:webdriver@0.1.8'
+      'xolvio:webdriver@0.2.5'
     ], ['server', 'client']);
     api.use([
       'velocity:html-reporter@0.4.1'
