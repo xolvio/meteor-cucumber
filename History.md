@@ -1,3 +1,7 @@
+#0.3.10
+
+* Fixed issue with patching. bindEnvironment no longer needed
+
 #0.3.6
 
 * Fixing error in sample tests

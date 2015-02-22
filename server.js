@@ -143,7 +143,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _patchHelper (helper) {
 
-    if (helper._patched !== null) {
+    if (!!helper._patched) {
       return;
     }
     helper._patched = true;
