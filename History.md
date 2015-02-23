@@ -1,3 +1,7 @@
+#0.4.0
+
+* Major bump of node-soft-mirror and webdriver versions
+
 #0.3.10
 
 * Fixed issue with patching. bindEnvironment no longer needed
