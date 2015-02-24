@@ -1,3 +1,7 @@
+#0.5.1
+
+* Bumping webdriver version
+
 #0.5.0
 
 * Baked in Chai and Chai-as-promised into step defs
