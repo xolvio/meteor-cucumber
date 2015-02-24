@@ -14,11 +14,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   var path = Npm.require('path'),
-      fs = Npm.require('fs'),
-      FRAMEWORK_NAME = 'cucumber',
-      FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
-      featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
-      featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
+    fs = Npm.require('fs'),
+    FRAMEWORK_NAME = 'cucumber',
+    FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
+    featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
+    featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
 
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
@@ -31,7 +31,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     return;
   }
 
-  function _getSampleTestFiles () {
+  function _getSampleTestFiles() {
     return [{
       path: path.join(featuresRelativePath, 'sample.feature'),
       contents: Assets.getText(path.join('sample-tests', 'feature.feature'))
@@ -48,6 +48,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   var Module = Npm.require('module');
+
+  cucumber.chai = Npm.require('chai');
+  var chaiAsPromised = Npm.require('chai-as-promised');
+  cucumber.chai.use(chaiAsPromised);
 
   Meteor.startup(function () {
     Meteor.call('velocity/mirrors/request', {
@@ -78,7 +82,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   });
 
-  function _rerunCucumber (file) {
+  function _rerunCucumber(file) {
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
@@ -90,7 +94,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     var execOptions = _getExecOptions();
     var configuration = cuke.Cli.Configuration(execOptions),
-        runtime = cuke.Runtime(configuration);
+      runtime = cuke.Runtime(configuration);
 
     var formatter = new cuke.Listener.JsonFormatter();
     formatter.log = _.once(Meteor.bindEnvironment(function (results) {
@@ -107,12 +111,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     runtime.attachListener(configuration.getFormatter());
 
     try {
-      runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
+      runtime.start(Meteor.bindEnvironment(function runtimeFinished() {
         Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
           DEBUG && console.log('[xolvio:cucumber] Completed');
         });
       }));
-    } catch(e) {
+    } catch (e) {
       if (e.message === 'Cannot call method \'convertScenarioOutlinesToScenarios\' of undefined') {
         console.error('[xolvio:cucumber]', e.message);
         console.error('[xolvio:cucumber]', 'Do you have an empty feature file?');
@@ -121,8 +125,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
   }
 
-  function _patchHelpers (cuke, execOptions, configuration) {
-    // taken from https://github.com/xdissent/meteor-cucumber/blob/master/src/runner/local.coffee
+  function _patchHelpers(cuke, execOptions, configuration) {
+    // taken from
+    // https://github.com/xdissent/meteor-cucumber/blob/master/src/runner/local.coffee
     var argumentParser = cuke.Cli.ArgumentParser(execOptions);
     argumentParser.parse();
     configuration.getSupportCodeLibrary = function () {
@@ -141,7 +146,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     };
   }
 
-  function _patchHelper (helper) {
+  function _patchHelper(helper) {
 
     if (!!helper._patched) {
       return;
@@ -163,6 +168,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         var args = Array.prototype.splice.call(arguments, 0);
         var callback = args.pop();
         args.push(Meteor.bindEnvironment(callback));
+
+        // bake in chai should assertions into steps
+        cucumber.chai.should();
+        helper.expect = cucumber.chai.expect;
+        helper.assert = cucumber.chai.assert;
+
         helper['_' + step].apply(helper, args);
       };
     });
@@ -176,27 +187,28 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  function _processFeatures (features) {
+  function _processFeatures(features) {
     _.each(features, function (feature) {
       _processFeature(feature);
     });
   }
 
-  function _processFeature (feature) {
+  function _processFeature(feature) {
     _.each(feature.elements, function (element) {
       _processFeatureElements(element, feature);
     });
   }
 
-  function _processFeatureElements (element, feature) {
+  function _processFeatureElements(element, feature) {
     _.each(element.steps, function (step) {
       _processStep(element, step, feature);
     });
   }
 
-  function _processStep (element, step, feature) {
+  function _processStep(element, step, feature) {
 
-    // Before elements are converted to steps within scenarios, so no need to process them here
+    // Before elements are converted to steps within scenarios, so no need to
+    // process them here
     if (element.type === 'background') {
       return;
     }
@@ -235,7 +247,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     // timestamp
   }
 
-  function _getExecOptions () {
+  function _getExecOptions() {
 
     // TODO externalize these options
     var options = {

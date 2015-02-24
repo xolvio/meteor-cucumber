@@ -5,13 +5,15 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.4.0',
+    version: '0.5.0',
     git: 'git@github.com:xolvio/meteor-cucumber.git',
     debugOnly: true
   });
 
   Npm.depends({
-    'cucumber': '0.4.7'
+    'cucumber': '0.4.7',
+    'chai': '2.0.0',
+    'chai-as-promised': '4.2.0'
   });
 
   Package.onUse(function (api) {
@@ -40,4 +42,5 @@
     api.export('cucumber', 'server');
   });
 
-})();
+})
+();
