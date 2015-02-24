@@ -1,3 +1,7 @@
+#0.5.0
+
+* Baked in Chai and Chai-as-promised into step defs
+
 #0.4.0
 
 * Major bump of node-soft-mirror and webdriver versions
