@@ -1,3 +1,7 @@
+#0.5.2
+
+* Upgraded cucumber.js to 0.4.8
+
 #0.5.1
 
 * Bumping webdriver version
