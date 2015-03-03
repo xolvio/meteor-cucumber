@@ -82,13 +82,15 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   });
 
-  function _rerunCucumber(file) {
+  function _rerunCucumber() {
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
-    if (file) {
-      delete Module._cache[file.absolutePath];
-    }
+    VelocityTestFiles.find({targetFramework: 'cucumber'}).forEach(
+      function (vtf) {
+        delete Module._cache[vtf.absolutePath];
+      }
+    );
 
     var cuke = Npm.require('cucumber');
 
