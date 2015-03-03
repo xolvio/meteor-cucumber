@@ -86,11 +86,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
-    VelocityTestFiles.find({targetFramework: 'cucumber'}).forEach(
-      function (vtf) {
-        delete Module._cache[vtf.absolutePath];
-      }
-    );
+    for (var key in Object.keys(Module._cache)) {delete Module._cache[key];}
 
     var cuke = Npm.require('cucumber');
 
@@ -256,9 +252,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       files: [featuresPath],
       //steps: path.join(featuresPath, 'step_definitions'),
       tags: _.result(process.env, 'CUCUMBER_TAGS', ''),
-      format: _.result(process.env, 'CUCUMBER_FORMAT', 'progress') // 'summary' 'json' 'pretty' 'progress'
+      format: _.result(process.env, 'CUCUMBER_FORMAT', 'progress') // 'summary'
+                                                                   // 'json'
+                                                                   // 'pretty'
+                                                                   // 'progress'
     };
-
 
     var execOptions = ['node', 'node_modules/.bin/cucumber-js'];
 
