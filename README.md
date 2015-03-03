@@ -14,3 +14,9 @@ meteor add xolvio:cucumber
 
 Check out the [leaderboard-cucumber](https://github.com/meteor-velocity/velocity-examples/tree/master/leaderboard-cucumber)
 example to see it in action.
+
+##Environment Config
+
+`CUCUMBER_FORMAT=summary/json/pretty/progress`
+`CUCUMBER_COFFEE_SNIPPETS=1`
+`CUCUMBER_TAGS='@mytag'`
