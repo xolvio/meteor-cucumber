@@ -253,7 +253,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     var options = {
       files: [featuresPath],
       //steps: path.join(featuresPath, 'step_definitions'),
-      tags: [],
+      tags: _.result(process.env, 'CUCUMBER_TAGS', ''),
       format: _.result(process.env, 'CUCUMBER_FORMAT', 'progress') // 'summary' 'json' 'pretty' 'progress'
     };
 

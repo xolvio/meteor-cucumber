@@ -19,3 +19,4 @@ example to see it in action.
 
 `CUCUMBER_FORMAT=summary/json/pretty/progress`
 `CUCUMBER_COFFEE_SNIPPETS=1`
+`CUCUMBER_TAGS='@mytag'`
