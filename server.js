@@ -255,9 +255,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     var options = {
       files: [featuresPath],
       //steps: path.join(featuresPath, 'step_definitions'),
-      tags: [],
-      format: 'progress' // 'summary' 'json' 'pretty' 'progress'
+      tags: _.result(process.env, 'CUCUMBER_TAGS', ''),
+      format: _.result(process.env, 'CUCUMBER_FORMAT', 'progress') // 'summary' 'json' 'pretty' 'progress'
     };
+
 
     var execOptions = ['node', 'node_modules/.bin/cucumber-js'];
 
@@ -279,6 +280,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       execOptions.push('--format');
       execOptions.push(options.format);
     }
+
+    if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
+      execOptions.push('--coffee');
+    }
+
     return execOptions;
   }
 
