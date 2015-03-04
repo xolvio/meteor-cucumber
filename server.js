@@ -86,6 +86,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
+    VelocityTestFiles.find({targetFramework: 'cucumber'}).forEach(
+      function (vtf) {
+        delete Module._cache[vtf.absolutePath];
+      });
+
     for (var key in Object.keys(Module._cache)) {delete Module._cache[key];}
 
     var cuke = Npm.require('cucumber');

@@ -1,3 +1,7 @@
+#0.5.3
+
+* Fix for Module._cache busting (file changes not working)
+
 #0.5.2
 
 * Upgraded cucumber.js to 0.4.8
