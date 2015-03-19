@@ -18,6 +18,10 @@
 
   Package.onUse(function (api) {
 
+    api.versionsFrom('METEOR@1.0.3.2');
+
+    api.use('sanjo:meteor-version@1.0.0', 'server')
+    api.use('package-version-parser', 'server')
     api.use([
       'underscore@1.0.2',
       'http@1.0.9',
