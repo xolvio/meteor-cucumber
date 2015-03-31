@@ -68,7 +68,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         changed: debouncedRerunCucumber
       });
 
-      process.on('SIGUSR2', Meteor.bindEnvironment(function () {
+      var meteorVersion = MeteorVersion.getSemanticVersion();
+      var reloadSignal = (meteorVersion && PackageVersion.lessThan(meteorVersion, '1.0.4')) ?
+        'SIGUSR2' :
+        'SIGHUP'
+
+      process.on(reloadSignal, Meteor.bindEnvironment(function () {
         DEBUG && console.log('[xolvio:cucumber] Client restart detected');
         debouncedRerunCucumber();
       }));
