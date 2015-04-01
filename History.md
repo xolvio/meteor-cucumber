@@ -1,3 +1,9 @@
+#0.5.4
+
+* Fixed compatibility with Meteor 1.0.4+ for client reloading
+* Updated all dependencies
+* Added fs-extra for lower level fs tests
+
 #0.5.3
 
 * Fix for Module._cache busting (file changes not working)

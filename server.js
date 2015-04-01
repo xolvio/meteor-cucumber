@@ -14,11 +14,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   var path = Npm.require('path'),
-    fs = Npm.require('fs'),
-    FRAMEWORK_NAME = 'cucumber',
-    FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
-    featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
-    featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
+      fs = Npm.require('fs'),
+      FRAMEWORK_NAME = 'cucumber',
+      FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
+      featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
+      featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
 
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
@@ -31,7 +31,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     return;
   }
 
-  function _getSampleTestFiles() {
+  function _getSampleTestFiles () {
     return [{
       path: path.join(featuresRelativePath, 'sample.feature'),
       contents: Assets.getText(path.join('sample-tests', 'feature.feature'))
@@ -70,8 +70,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       var meteorVersion = MeteorVersion.getSemanticVersion();
       var reloadSignal = (meteorVersion && PackageVersion.lessThan(meteorVersion, '1.0.4')) ?
-        'SIGUSR2' :
-        'SIGHUP'
+        'SIGUSR2' : 'SIGHUP';
+
+      process.on('message', Meteor.bindEnvironment(function (message) {
+        if (message.refresh && message.refresh === 'client') {
+          DEBUG && console.log('[xolvio:cucumber] Client restart detected');
+          debouncedRerunCucumber();
+        }
+      }));
 
       process.on(reloadSignal, Meteor.bindEnvironment(function () {
         DEBUG && console.log('[xolvio:cucumber] Client restart detected');
@@ -87,7 +93,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   });
 
-  function _rerunCucumber() {
+  function _rerunCucumber () {
 
     console.log('[xolvio:cucumber] Cucumber is running');
 
@@ -96,13 +102,15 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         delete Module._cache[vtf.absolutePath];
       });
 
-    for (var key in Object.keys(Module._cache)) {delete Module._cache[key];}
+    for (var key in Object.keys(Module._cache)) {
+      delete Module._cache[key];
+    }
 
     var cuke = Npm.require('cucumber');
 
     var execOptions = _getExecOptions();
     var configuration = cuke.Cli.Configuration(execOptions),
-      runtime = cuke.Runtime(configuration);
+        runtime = cuke.Runtime(configuration);
 
     var formatter = new cuke.Listener.JsonFormatter();
     formatter.log = _.once(Meteor.bindEnvironment(function (results) {
@@ -119,7 +127,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     runtime.attachListener(configuration.getFormatter());
 
     try {
-      runtime.start(Meteor.bindEnvironment(function runtimeFinished() {
+      runtime.start(Meteor.bindEnvironment(function runtimeFinished () {
         Meteor.call('velocity/reports/completed', {framework: FRAMEWORK_NAME}, function () {
           DEBUG && console.log('[xolvio:cucumber] Completed');
         });
@@ -133,7 +141,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
   }
 
-  function _patchHelpers(cuke, execOptions, configuration) {
+  function _patchHelpers (cuke, execOptions, configuration) {
     // taken from
     // https://github.com/xdissent/meteor-cucumber/blob/master/src/runner/local.coffee
     var argumentParser = cuke.Cli.ArgumentParser(execOptions);
@@ -154,7 +162,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     };
   }
 
-  function _patchHelper(helper) {
+  function _patchHelper (helper) {
 
     if (!!helper._patched) {
       return;
@@ -195,25 +203,25 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  function _processFeatures(features) {
+  function _processFeatures (features) {
     _.each(features, function (feature) {
       _processFeature(feature);
     });
   }
 
-  function _processFeature(feature) {
+  function _processFeature (feature) {
     _.each(feature.elements, function (element) {
       _processFeatureElements(element, feature);
     });
   }
 
-  function _processFeatureElements(element, feature) {
+  function _processFeatureElements (element, feature) {
     _.each(element.steps, function (step) {
       _processStep(element, step, feature);
     });
   }
 
-  function _processStep(element, step, feature) {
+  function _processStep (element, step, feature) {
 
     // Before elements are converted to steps within scenarios, so no need to
     // process them here
@@ -255,7 +263,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     // timestamp
   }
 
-  function _getExecOptions() {
+  function _getExecOptions () {
 
     // TODO externalize these options
     var options = {
