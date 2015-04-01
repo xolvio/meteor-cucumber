@@ -14,11 +14,13 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   var path = Npm.require('path'),
-      fs = Npm.require('fs'),
+      fs = Npm.require('fs-extra'),
       FRAMEWORK_NAME = 'cucumber',
       FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
       featuresRelativePath = path.join(FRAMEWORK_NAME, 'features'),
       featuresPath = path.join(Velocity.getTestsPath(), featuresRelativePath);
+
+  cucumber.fs = fs;
 
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {

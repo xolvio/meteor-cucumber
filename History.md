@@ -1,3 +1,7 @@
+#0.5.5
+
+* Fix for fs-extra
+
 #0.5.4
 
 * Fixed compatibility with Meteor 1.0.4+ for client reloading
