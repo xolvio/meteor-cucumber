@@ -57,8 +57,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   Meteor.startup(function () {
     Meteor.call('velocity/mirrors/request', {
-      framework: 'cucumber',
-      testsPath: FRAMEWORK_NAME
+      framework: 'cucumber'
     });
     var init = function (mirror) {
       cucumber.mirror = mirror;
