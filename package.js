@@ -27,7 +27,6 @@
       'underscore@1.0.2',
       'http@1.0.9',
       'velocity:core@0.4.5',
-      'velocity:node-soft-mirror@0.3.1',
       'velocity:shim@0.1.0',
       'xolvio:webdriver@0.5.2'
     ], ['server', 'client']);
