@@ -1,3 +1,10 @@
+#0.6.0
+
+* Increased stability by using cuke-monkey npm package
+* Rewrote the core
+* Improved error messaging by reducing noise
+* Works with the new Velocity mirrors
+
 #0.5.5
 
 * Fix for fs-extra
