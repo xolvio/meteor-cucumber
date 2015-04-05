@@ -11,7 +11,7 @@
   });
 
   Npm.depends({
-    'cuke-monkey': '0.1.1',
+    'cuke-monkey': '0.2.4',
     'colors': '1.0.3',
     'fs-extra': '0.17.0'
   });
@@ -36,7 +36,7 @@
     ], 'server', {isAsset: true});
 
     api.addFiles(['hub-server.js'], 'server');
-    //api.addFiles(['mirror-server.js'], 'server');
+    api.addFiles(['mirror-server.js'], 'server');
 
   });
 

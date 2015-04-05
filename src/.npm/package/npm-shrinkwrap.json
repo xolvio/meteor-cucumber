@@ -4,13 +4,13 @@
       "version": "1.0.3"
     },
     "cuke-monkey": {
-      "version": "0.1.1",
+      "version": "0.2.4",
       "dependencies": {
         "async": {
           "version": "0.9.0"
         },
         "chai": {
-          "version": "2.1.2",
+          "version": "2.2.0",
           "dependencies": {
             "assertion-error": {
               "version": "1.0.0"
@@ -122,7 +122,7 @@
                   "version": "0.0.1"
                 },
                 "concat-stream": {
-                  "version": "1.4.7",
+                  "version": "1.4.8",
                   "dependencies": {
                     "typedarray": {
                       "version": "0.0.6"
@@ -224,7 +224,7 @@
                           "version": "1.0.0"
                         },
                         "sha.js": {
-                          "version": "2.3.6"
+                          "version": "2.4.0"
                         }
                       }
                     },
@@ -461,7 +461,7 @@
                   }
                 },
                 "module-deps": {
-                  "version": "3.7.5",
+                  "version": "3.7.6",
                   "dependencies": {
                     "JSONStream": {
                       "version": "0.7.4",
@@ -890,250 +890,8 @@
         "minimist": {
           "version": "1.1.1"
         },
-        "phantomjs": {
-          "version": "1.9.16",
-          "dependencies": {
-            "adm-zip": {
-              "version": "0.4.4"
-            },
-            "fs-extra": {
-              "version": "0.16.5",
-              "dependencies": {
-                "graceful-fs": {
-                  "version": "3.0.6"
-                },
-                "jsonfile": {
-                  "version": "2.0.0"
-                },
-                "rimraf": {
-                  "version": "2.3.2",
-                  "dependencies": {
-                    "glob": {
-                      "version": "4.5.3",
-                      "dependencies": {
-                        "inflight": {
-                          "version": "1.0.4",
-                          "dependencies": {
-                            "wrappy": {
-                              "version": "1.0.1"
-                            }
-                          }
-                        },
-                        "inherits": {
-                          "version": "2.0.1"
-                        },
-                        "minimatch": {
-                          "version": "2.0.4",
-                          "dependencies": {
-                            "brace-expansion": {
-                              "version": "1.1.0",
-                              "dependencies": {
-                                "balanced-match": {
-                                  "version": "0.2.0"
-                                },
-                                "concat-map": {
-                                  "version": "0.0.1"
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "once": {
-                          "version": "1.3.1",
-                          "dependencies": {
-                            "wrappy": {
-                              "version": "1.0.1"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "kew": {
-              "version": "0.4.0"
-            },
-            "npmconf": {
-              "version": "2.1.1",
-              "dependencies": {
-                "config-chain": {
-                  "version": "1.1.8",
-                  "dependencies": {
-                    "proto-list": {
-                      "version": "1.2.3"
-                    }
-                  }
-                },
-                "inherits": {
-                  "version": "2.0.1"
-                },
-                "ini": {
-                  "version": "1.3.3"
-                },
-                "mkdirp": {
-                  "version": "0.5.0",
-                  "dependencies": {
-                    "minimist": {
-                      "version": "0.0.8"
-                    }
-                  }
-                },
-                "nopt": {
-                  "version": "3.0.1",
-                  "dependencies": {
-                    "abbrev": {
-                      "version": "1.0.5"
-                    }
-                  }
-                },
-                "once": {
-                  "version": "1.3.1",
-                  "dependencies": {
-                    "wrappy": {
-                      "version": "1.0.1"
-                    }
-                  }
-                },
-                "osenv": {
-                  "version": "0.1.0"
-                },
-                "semver": {
-                  "version": "4.3.3"
-                },
-                "uid-number": {
-                  "version": "0.0.5"
-                }
-              }
-            },
-            "progress": {
-              "version": "1.1.8"
-            },
-            "request": {
-              "version": "2.42.0",
-              "dependencies": {
-                "bl": {
-                  "version": "0.9.4",
-                  "dependencies": {
-                    "readable-stream": {
-                      "version": "1.0.33",
-                      "dependencies": {
-                        "core-util-is": {
-                          "version": "1.0.1"
-                        },
-                        "isarray": {
-                          "version": "0.0.1"
-                        },
-                        "string_decoder": {
-                          "version": "0.10.31"
-                        },
-                        "inherits": {
-                          "version": "2.0.1"
-                        }
-                      }
-                    }
-                  }
-                },
-                "caseless": {
-                  "version": "0.6.0"
-                },
-                "forever-agent": {
-                  "version": "0.5.2"
-                },
-                "qs": {
-                  "version": "1.2.2"
-                },
-                "json-stringify-safe": {
-                  "version": "5.0.0"
-                },
-                "mime-types": {
-                  "version": "1.0.2"
-                },
-                "node-uuid": {
-                  "version": "1.4.3"
-                },
-                "tunnel-agent": {
-                  "version": "0.4.0"
-                },
-                "tough-cookie": {
-                  "version": "0.12.1",
-                  "dependencies": {
-                    "punycode": {
-                      "version": "1.3.2"
-                    }
-                  }
-                },
-                "form-data": {
-                  "version": "0.1.4",
-                  "dependencies": {
-                    "combined-stream": {
-                      "version": "0.0.7",
-                      "dependencies": {
-                        "delayed-stream": {
-                          "version": "0.0.5"
-                        }
-                      }
-                    },
-                    "mime": {
-                      "version": "1.2.11"
-                    }
-                  }
-                },
-                "http-signature": {
-                  "version": "0.10.1",
-                  "dependencies": {
-                    "assert-plus": {
-                      "version": "0.1.5"
-                    },
-                    "asn1": {
-                      "version": "0.1.11"
-                    },
-                    "ctype": {
-                      "version": "0.5.3"
-                    }
-                  }
-                },
-                "oauth-sign": {
-                  "version": "0.4.0"
-                },
-                "hawk": {
-                  "version": "1.1.1",
-                  "dependencies": {
-                    "hoek": {
-                      "version": "0.9.1"
-                    },
-                    "boom": {
-                      "version": "0.4.2"
-                    },
-                    "cryptiles": {
-                      "version": "0.2.2"
-                    },
-                    "sntp": {
-                      "version": "0.2.4"
-                    }
-                  }
-                },
-                "aws-sign2": {
-                  "version": "0.5.0"
-                },
-                "stringstream": {
-                  "version": "0.0.4"
-                }
-              }
-            },
-            "request-progress": {
-              "version": "0.3.1",
-              "dependencies": {
-                "throttleit": {
-                  "version": "0.0.2"
-                }
-              }
-            },
-            "which": {
-              "version": "1.0.9"
-            }
-          }
+        "phantomjs-bin": {
+          "version": "1.0.1"
         },
         "saucelabs": {
           "version": "0.1.1"
