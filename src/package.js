@@ -27,6 +27,9 @@
       'velocity:shim@0.1.0'
     ], ['server', 'client']);
     api.use([
+      'sanjo:meteor-files-helpers@1.1.0_2'
+    ], 'server');
+    api.use([
       'velocity:html-reporter@0.4.2'
     ], 'client');
 
