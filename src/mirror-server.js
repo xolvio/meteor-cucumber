@@ -95,14 +95,16 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
 
     args.push('-r');
-    args.push(path.join(process.env.PWD, 'tests', 'cucumber', 'features'));
+    args.push(path.join(
+      MeteorFilesHelpers.getAppPath(), 'tests', 'cucumber', 'features'
+    ));
     args.push('--snippets');
     args.push('--ipc');
     args.push('--ddp=' + process.env.ROOT_URL);
 
     DEBUG && console.log('[xolvio:cucumber] Running', BINARY, args);
     var proc = Npm.require('child_process').spawn(BINARY, args, {
-      cwd: path.resolve(process.env.PWD, 'tests', FRAMEWORK_NAME),
+      cwd: path.resolve(MeteorFilesHelpers.getAppPath(), 'tests', FRAMEWORK_NAME),
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
       env: process.env
     });
@@ -213,8 +215,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         line.indexOf('_stream_readable.js:') === -1 &&
         line !== ''
       ) {
-        msg += (index !== 0 ? '  ' : '') + line.replace(process.env.PWD, '') +
-        '\n';
+        msg += (index !== 0 ? '  ' : '') +
+               line.replace(MeteorFilesHelpers.getAppPath(), '') + '\n';
       }
     });
 

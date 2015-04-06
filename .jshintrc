@@ -37,6 +37,7 @@
     "Mongo": false,
     "console": false,
     "cucumber": false,
-    "_": false
+    "_": false,
+    "MeteorFilesHelpers": false
   }
 }
