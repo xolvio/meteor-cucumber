@@ -7,6 +7,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   'use strict';
 
   var path = Npm.require('path');
+  var fs = Npm.require('fs-extra');
 
   var FRAMEWORK_NAME = 'cucumber';
   var BINARY = process.env.CUKE_MONKEY_PATH || Npm.require('cuke-monkey').bin;
@@ -96,18 +97,25 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     args.push('-r');
     args.push(path.join(
-      MeteorFilesHelpers.getAppPath(), 'tests', 'cucumber', 'features'
+      process.env.VELOCITY_MAIN_APP_PATH, 'tests', 'cucumber', 'features'
     ));
     args.push('--snippets');
     args.push('--ipc');
     args.push('--ddp=' + process.env.ROOT_URL);
 
     DEBUG && console.log('[xolvio:cucumber] Running', BINARY, args);
-    var proc = Npm.require('child_process').spawn(BINARY, args, {
-      cwd: path.resolve(MeteorFilesHelpers.getAppPath(), 'tests', FRAMEWORK_NAME),
+    fs.chmodSync(BINARY, parseInt('555', 8));
+    var nodePath = process.execPath;
+    var nodeDir = path.dirname(nodePath);
+    var env = _.clone(process.env);
+    // Expose the Meteor node binary path for the script that is run
+    env.PATH = nodeDir + ':' + env.PATH;
+    var spawnOptions = {
+      cwd: path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME),
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-      env: process.env
-    });
+      env: env
+    };
+    var proc = Npm.require('child_process').spawn(BINARY, args, spawnOptions);
 
     proc.stdout.on('data', function (data) {
       process.stdout.write(data);
@@ -216,7 +224,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         line !== ''
       ) {
         msg += (index !== 0 ? '  ' : '') +
-               line.replace(MeteorFilesHelpers.getAppPath(), '') + '\n';
+               line.replace(process.env.VELOCITY_MAIN_APP_PATH, '') + '\n';
       }
     });
 
