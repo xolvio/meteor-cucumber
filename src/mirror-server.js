@@ -87,23 +87,24 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     var args = [];
     if (feature) {
-      DEBUG && console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath);
+      console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath);
       args.push(feature.absolutePath);
+    } else {
+      console.log('[xolvio:cucumber] Cucumber is running');
+      _velocityConnection.call('velocity/reports/reset');
     }
 
     args.push('-r');
-    args.push(path.join(process.env.PWD, 'tests','cucumber','features'));
+    args.push(path.join(process.env.PWD, 'tests', 'cucumber', 'features'));
     args.push('--snippets');
     args.push('--ipc');
-    args.push('--ddp');
-    args.push('--ddp_host=' + process.env.HOST.match(/http:\/\/(.*):/)[1]);
-    args.push('--ddp_port=' + process.env.PORT);
+    args.push('--ddp=' + process.env.ROOT_URL);
 
     DEBUG && console.log('[xolvio:cucumber] Running', BINARY, args);
     var proc = Npm.require('child_process').spawn(BINARY, args, {
       cwd: path.resolve(process.env.PWD, 'tests', FRAMEWORK_NAME),
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-      env : process.env
+      env: process.env
     });
 
     proc.stdout.on('data', function (data) {
@@ -116,11 +117,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       if (feature) {
         _velocityTestFiles.update(feature._id, {$set: {status: 'DONE'}});
       } else {
-        VelocityTestFiles.update(
-          {targetFramework: FRAMEWORK_NAME, relativePath: /\.feature$/},
-          {$set: {status: 'DONE'}},
-          {multi: true}
-        );
+        _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
       }
     }));
 
@@ -170,13 +167,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
     if (step.result.error_message) {
 
-      var conditionedError = _conditionError(step.result.error_message);
-
       if (step.result.error_message.name) {
         report.failureType = step.result.error_message.name;
-        report.failureStackTrace = step.result.error_message.message;
+        report.failureStackTrace = _conditionError(step.result.error_message.message);
       } else {
-        report.failureStackTrace = conditionedError;
+        report.failureStackTrace = _conditionError(step.result.error_message);
       }
     }
 
@@ -225,20 +220,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     // TODO deal with this error for users
     // Cannot call method 'convertScenarioOutlinesToScenarios' of undefined
-
-
-    //at [object Object].emit (events.js:95:17)
-    //at [object Object].emit (events.js:117:20)
-    //at write (_stream_readable.js:602:24)
-    //at flow (_stream_readable.js:611:7)
-    //at Socket.pipeOnReadable (_stream_readable.js:643:5)
-    //at Socket.emit (events.js:92:17)
-    //at emitReadable_ (_stream_readable.js:427:10)
-    //at emitReadable (_stream_readable.js:423:5)
-    //at readableAddChunk (_stream_readable.js:166:9)
-    //at Socket.Readable.push (_stream_readable.js:128:10)
-    //at TCP.onread (net.js:529:21)
-
 
     msg = msg.substring(0, msg.length - 1);
     console.log(msg.magenta);

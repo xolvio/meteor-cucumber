@@ -19,6 +19,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     return;
   }
 
+  DEBUG && console.log('[xolvio:cucumber] Cucumber hub is loading');
+
   if (Velocity && Velocity.registerTestingFramework) {
     Velocity.registerTestingFramework(FRAMEWORK_NAME, {
       regex: FRAMEWORK_REGEX,
@@ -41,18 +43,23 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   });
 
   function _init () {
-    var debouncedRun = _.debounce(Meteor.bindEnvironment(_run), 300);
-    VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observeChanges({
-      added: debouncedRun,
-      removed: debouncedRun,
-      changed: debouncedRun
-    });
-    process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
-    process.on('message', Meteor.bindEnvironment(function (message) {
-      if (message.refresh && message.refresh === 'client') {
-        debouncedRun();
-      }
-    }));
+
+    if (!!process.env.CUCUMBER_SPLIT_FEATURES) {
+
+      var debouncedRun = _.debounce(Meteor.bindEnvironment(_run), 300);
+      VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observeChanges({
+        added: debouncedRun,
+        removed: debouncedRun,
+        changed: debouncedRun
+      });
+      process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
+      process.on('message', Meteor.bindEnvironment(function (message) {
+        if (message.refresh && message.refresh === 'client') {
+          debouncedRun();
+        }
+      }));
+
+    }
   }
 
   function _run (id, changes) {
