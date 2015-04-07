@@ -4,6 +4,9 @@
 * Rewrote the core
 * Improved error messaging by reducing noise
 * Works with the new Velocity mirrors
+* Moved all runner code into the mirror
+* Added experimental parallel testing mode
+* Includes a DDP connection to the mirror by default
 
 #0.5.5
 
