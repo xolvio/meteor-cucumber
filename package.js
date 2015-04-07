@@ -32,13 +32,13 @@
     ], 'client');
 
     api.add_files([
-      'sample-tests/feature.feature',
-      'sample-tests/steps.js',
-      'sample-tests/fixture.js'
+      'src/sample-tests/feature.feature',
+      'src/sample-tests/steps.js',
+      'src/sample-tests/fixture.js'
     ], 'server', {isAsset: true});
 
-    api.addFiles(['hub-server.js'], 'server');
-    api.addFiles(['mirror-server.js'], 'server');
+    api.addFiles(['src/hub-server.js'], 'server');
+    api.addFiles(['src/mirror-server.js'], 'server');
 
   });
 
