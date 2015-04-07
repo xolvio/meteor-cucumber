@@ -37,7 +37,7 @@ underscore@1.0.3
 url@1.0.4
 velocity:chokidar@0.12.6_1
 velocity:core@0.6.0-rc.5
-velocity:html-reporter@0.4.2
+velocity:html-reporter@0.5.0
 velocity:meteor-internals@1.1.0_5
 velocity:shim@0.1.0
-xolvio:cucumber@0.6.0-rc.4
+xolvio:cucumber@0.6.0-rc.5
