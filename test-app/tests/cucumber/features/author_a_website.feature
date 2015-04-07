@@ -5,6 +5,6 @@ Feature: Author a Website
   So that I can create the simplest website in the world
 
   Scenario: Author using the Meteor settings file
-    Given I have authored the site title as "Meteor Cucumber by Xolv.io"
+    Given I have authored the site title as "My Test Title"
     When  I navigate to "/"
-    Then  I should see the heading "Meteor Cucumber by Xolv.io"
+    Then  I should see the heading "My Test Title"
