@@ -9,6 +9,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   var path = Npm.require('path');
   var fs = Npm.require('fs-extra');
 
+  // this library extends the string prototype
+  Npm.require('colors');
+
   var FRAMEWORK_NAME = 'cucumber';
   var BINARY = process.env.CUKE_MONKEY_PATH || Npm.require('cuke-monkey').bin;
   if (process.env.NODE_ENV !== 'development' || !process.env.IS_MIRROR ||
@@ -19,7 +22,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   DEBUG && console.log('[xolvio:cucumber] Mirror server is initializing');
 
   var _velocityConnection,
-    _velocityTestFiles;
+      _velocityTestFiles;
 
   Meteor.startup(function () {
 
@@ -53,7 +56,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   var _isRunning = false;
 
-  function _findAndRun() {
+  function _findAndRun () {
     if (_isRunning) {
       return;
     }
@@ -84,7 +87,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  function _run(feature, callback) {
+  function _run (feature, callback) {
 
     var args = [];
     if (feature) {
@@ -102,6 +105,54 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     args.push('--snippets');
     args.push('--ipc');
     args.push('--ddp=' + process.env.ROOT_URL);
+
+    if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
+      args.push('--coffee');
+    }
+
+    if (process.env.CUCUMBER_TAGS) {
+      args.push('--CUCUMBER_TAGS=' + process.env.CUCUMBER_TAGS);
+    }
+
+    if (process.env.CUCUMBER_FORMAT) {
+      args.push('--format=' + process.env.CUCUMBER_FORMAT);
+    } else {
+      args.push('--format=pretty');
+    }
+
+    if (process.env.WD_TIMEOUT_ASYNC_SCRIPT) {
+      args.push('--timeoutsAsyncScript=' + process.env.WD_TIMEOUT_ASYNC_SCRIPT);
+    }
+
+    if (process.env.SELENIUM_BROWSER) {
+      args.push('--browser=' + process.env.SELENIUM_BROWSER);
+    }
+
+    if (DEBUG) {
+      args.push('--debug');
+    }
+
+    if (process.env.HUB_HOST) {
+      args.push('--host=' + process.env.SELENIUM_BROWSER);
+    }
+    if (process.env.HUB_PORT) {
+      args.push('--port=' + process.env.SELENIUM_BROWSER);
+    }
+    if (process.env.HUB_USER) {
+      args.push('--user=' + process.env.SELENIUM_BROWSER);
+    }
+    if (process.env.HUB_KEY) {
+      args.push('--key=' + process.env.SELENIUM_BROWSER);
+    }
+    if (process.env.HUB_PLATFORM) {
+      args.push('--platform=' + process.env.SELENIUM_BROWSER);
+    }
+    if (process.env.HUB_VERSION) {
+      args.push('--version=' + process.env.SELENIUM_BROWSER);
+    }
+
+
+
 
     DEBUG && console.log('[xolvio:cucumber] Running', BINARY, args);
     fs.chmodSync(BINARY, parseInt('555', 8));
@@ -141,25 +192,25 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   }
 
-  function _processFeatures(features) {
+  function _processFeatures (features) {
     _.each(features, function (feature) {
       _processFeature(feature);
     });
   }
 
-  function _processFeature(feature) {
+  function _processFeature (feature) {
     _.each(feature.elements, function (element) {
       _processFeatureElements(element, feature);
     });
   }
 
-  function _processFeatureElements(element, feature) {
+  function _processFeatureElements (element, feature) {
     _.each(element.steps, function (step) {
       _processStep(element, step, feature);
     });
   }
 
-  function _processStep(element, step, feature) {
+  function _processStep (element, step, feature) {
 
     if (element.type === 'background') {
       return;
@@ -204,35 +255,48 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  function _conditionError(errorMessage) {
+  function _conditionError (errorMessage) {
 
     if (DEBUG) {
       console.error(errorMessage);
       return errorMessage;
     }
 
-    var msg = '';
-    _.each(errorMessage.split('\n'), function (line, index) {
-      line = line.trim();
-      if (
-        line.indexOf('/cuke-monkey/node_modules') === -1 &&
-        line.indexOf('(node.js:') === -1 &&
-        line.indexOf('(events.js:') === -1 &&
-        line.indexOf('(net.js:') === -1 &&
-        line.indexOf('(module.js:') === -1 &&
-        line.indexOf('_stream_readable.js:') === -1 &&
-        line !== ''
-      ) {
-        msg += (index !== 0 ? '  ' : '') +
-               line.replace(process.env.VELOCITY_MAIN_APP_PATH, '') + '\n';
+    var msg = '',
+        insertDots = false,
+        DOTS = '  ...\n';
+
+    try {
+      _.each(errorMessage.split('\n'), function (line, index) {
+        line = line.trim();
+        if (index === 0) {
+          msg += line;
+          return;
+        }
+        if (line.indexOf('/tests/cucumber/') !== -1) {
+          if (insertDots) {
+            msg += DOTS;
+            insertDots = false;
+          }
+          msg += ((index !== 0 ? '  ' : '') +
+          line.replace(process.env.VELOCITY_MAIN_APP_PATH, '') + '\n');
+        } else {
+          insertDots = true;
+        }
+      });
+      if (insertDots) {
+        msg += DOTS;
       }
-    });
 
-    // TODO deal with this error for users
-    // Cannot call method 'convertScenarioOutlinesToScenarios' of undefined
+      // TODO deal with this error for users
+      // Cannot call method 'convertScenarioOutlinesToScenarios' of undefined
 
-    msg = msg.substring(0, msg.length - 1);
-    console.log(msg.magenta);
+      msg = msg.substring(0, msg.length);
+      //console.log(msg.magenta);
+    } catch (e) {
+      msg = errorMessage;
+    }
+
     return msg;
   }
 
