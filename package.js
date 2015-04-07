@@ -5,7 +5,7 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.6.0-rc.4',
+    version: '0.6.0-rc.5',
     git: 'git@github.com:xolvio/meteor-cucumber.git',
     debugOnly: true,
     documentation: null
@@ -28,7 +28,7 @@
       'velocity:shim@0.1.0'
     ], ['server', 'client']);
     api.use([
-      'velocity:html-reporter@0.4.2'
+      'velocity:html-reporter@0.5.0'
     ], 'client');
 
     api.add_files([
