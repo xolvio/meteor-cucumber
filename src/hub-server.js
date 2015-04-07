@@ -11,7 +11,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   var FRAMEWORK_NAME = 'cucumber',
       FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
       SAMPLE_TESTS = [{
-        contents: Assets.getText(path.join('sample-tests', 'steps.js'))
+        contents: Assets.getText(path.join('sample-tests', 'feature.feature')),
+        path: path.join(FRAMEWORK_NAME, 'features', 'sample.feature')
+      }, {
+        contents: Assets.getText(path.join('sample-tests', 'steps.js')),
+        path: path.join(FRAMEWORK_NAME, 'features', 'step_definitions', 'sample_steps.js')
+      }, {
+        contents: Assets.getText(path.join('sample-tests', 'fixture.js')),
+        path: path.join(FRAMEWORK_NAME, 'my_fixture.js')
       }];
 
   if (process.env.NODE_ENV !== 'development' || process.env.IS_MIRROR ||

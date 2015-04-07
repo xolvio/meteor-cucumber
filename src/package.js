@@ -5,7 +5,7 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.6.0-rc.3',
+    version: '0.6.0-rc.4',
     git: 'git@github.com:xolvio/meteor-cucumber.git',
     debugOnly: true,
     documentation: null
@@ -33,7 +33,8 @@
 
     api.add_files([
       'sample-tests/feature.feature',
-      'sample-tests/steps.js'
+      'sample-tests/steps.js',
+      'sample-tests/fixture.js'
     ], 'server', {isAsset: true});
 
     api.addFiles(['hub-server.js'], 'server');

@@ -8,10 +8,7 @@
     var url = require('url');
 
     this.Given(/^I am on the home page$/, function (callback) {
-      // this.ddp is a connection to the mirror
-      this.ddp.call('reset', [], function () {
-        callback();
-      });
+      this.ddp.call('reset', [], callback);
     });
 
     this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
@@ -22,7 +19,6 @@
     });
 
     this.Then(/^I should see the title of "([^"]*)"$/, function (expectedTitle, callback) {
-
       // you can use chai-as-promised, see here: https://github.com/domenic/chai-as-promised/
       this.browser.
         getTitle().should.become(expectedTitle).and.notify(callback);
