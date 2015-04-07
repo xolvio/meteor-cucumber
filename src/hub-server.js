@@ -18,7 +18,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         path: path.join(FRAMEWORK_NAME, 'features', 'step_definitions', 'sample_steps.js')
       }, {
         contents: Assets.getText(path.join('src', 'sample-tests', 'fixture.js')),
-        path: path.join(FRAMEWORK_NAME, 'my_fixture.js')
+        path: path.join(FRAMEWORK_NAME, 'fixtures', 'my_fixture.js')
       }];
 
   if (process.env.NODE_ENV !== 'development' || process.env.IS_MIRROR ||
@@ -39,6 +39,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     Meteor.call('velocity/mirrors/request', {
       framework: FRAMEWORK_NAME,
       args: ['--raw-logs'],
+      testsPath: path.join(FRAMEWORK_NAME, 'fixtures'),
       nodes: 1
     });
 
