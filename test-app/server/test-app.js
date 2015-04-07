@@ -3,8 +3,11 @@
   'use strict';
 
   Meteor.methods({
-    'hello' : function() {
-      return 'world';
+    'updateTitle' : function(title) {
+      Meteor.settings.pageTitle = title;
+    },
+    'getTitle' : function() {
+      return Meteor.settings.pageTitle;
     }
   });
 
