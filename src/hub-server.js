@@ -40,7 +40,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       framework: FRAMEWORK_NAME,
       args: ['--raw-logs'],
       testsPath: path.join(FRAMEWORK_NAME, 'fixtures'),
-      nodes: 1
+      nodes: process.env.CUCUMBER_NODES ? process.env.CUCUMBER_NODES : 1
     });
 
     var initOnce = _.once(Meteor.bindEnvironment(_init));
@@ -52,7 +52,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _init () {
 
-    if (!!process.env.CUCUMBER_SPLIT_FEATURES) {
+    if (!!process.env.CUCUMBER_NODES) {
 
       var debouncedRun = _.debounce(Meteor.bindEnvironment(_run), 300);
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observeChanges({

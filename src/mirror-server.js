@@ -75,7 +75,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }
     };
 
-    if (!!process.env.CUCUMBER_SPLIT_FEATURES) {
+    if (!!process.env.CUCUMBER_NODES) {
       DEBUG && console.log('[xolvio:cucumber] Running in split-features mode');
       findAndRun();
     } else {
