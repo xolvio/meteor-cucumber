@@ -22,7 +22,7 @@ examples.
 
 ##Installation
 ```sh
-meteor add xolvio:cucumber@0.6.0-rc.6
+meteor add xolvio:cucumber@0.6.0-rc.7
 ```
 
 ##Usage
