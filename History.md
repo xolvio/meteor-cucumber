@@ -9,6 +9,7 @@
 * Includes a DDP connection to the mirror by default
 * Sample tests are much simpler now with a fixture, ddp and webdriver example
 * Uses new smaller reporter
+* Experimental support for parallel testing
 
 #0.5.5
 
