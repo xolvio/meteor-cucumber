@@ -347,6 +347,10 @@ Books:
 
 ##Breaking Changes
 
+###No more test-proxy package
+The latest Velocity 0.6.0 release removed the `test-proxy` package. After you update, please be sure
+to remove this package from your `/packages` folder.
+
 ###Cukes now runs outside the Meteor context
 You no longer have access to the main Meteor app from within your step definitions. You should never
 need the main app anyway. Typically users were using Meteor.DDP, but you can now use `this.ddp`
