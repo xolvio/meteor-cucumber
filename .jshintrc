@@ -34,8 +34,10 @@
     "VelocityMirrors": false,
     "VelocityAggregateReports": false,
     "VelocityLogs": false,
+    "Mongo": false,
     "console": false,
     "cucumber": false,
-    "_": false
+    "_": false,
+    "MeteorFilesHelpers": false
   }
 }

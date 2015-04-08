@@ -1,3 +1,16 @@
+#0.6.0
+
+* Increased stability by using cuke-monkey npm package
+* Rewrote the core
+* Improved error messaging by reducing noise
+* Works with the new Velocity mirrors
+* Moved all runner code into the mirror
+* Added experimental parallel testing mode
+* Includes a DDP connection to the mirror by default
+* Sample tests are much simpler now with a fixture, ddp and webdriver example
+* Uses new smaller reporter
+* Experimental support for parallel testing
+
 #0.5.5
 
 * Fix for fs-extra
