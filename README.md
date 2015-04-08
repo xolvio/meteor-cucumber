@@ -354,11 +354,10 @@ to remove this package from your `/packages` folder.
 ###Cukes now runs outside the Meteor context
 You no longer have access to the main Meteor app from within your step definitions. You should never
 need the main app anyway. Typically users were using Meteor.DDP, but you can now use `this.ddp`
-instead which is pre-connected to the mirror. See above for details.
+instead which is pre-connected to the mirror. [See the DDP section above](https://github.com/xolvio/meteor-cucumber#ddp) for details.
 
 ###No World object
-Cuke-monkey already creates and initializes a simple world object
-((see here)[https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47]).
+Cuke-monkey already creates and initializes a (simple world object)[https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47].
 This means no more `helper.world.browser`, instead you can just replace all those calls with
 `this.browser`.
 
