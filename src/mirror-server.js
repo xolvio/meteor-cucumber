@@ -169,6 +169,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     var proc = Npm.require('child_process').spawn(BINARY, args, spawnOptions);
 
     proc.stdout.on('data', function (data) {
+      data = data.toString().replace(process.env.VELOCITY_MAIN_APP_PATH, '');
       process.stdout.write(data);
     });
     proc.stderr.pipe(process.stderr);
