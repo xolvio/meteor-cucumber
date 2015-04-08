@@ -10,7 +10,7 @@ allows you to define the behaviour of your app using plain text. See below for m
 examples.
 
 ##Features
-* Uses a Promises enabled fork of CucumberJS
+* Uses a Promises enabled fork of CucumberJS (soon)
 * Includes [Chai](http://chaijs.com/) & [Chai-as-promised](https://github.com/domenic/chai-as-promised/) promise based assertions by default
 * Auto-configured [WebdriverIO](http://webdriver.io/) with [PhantomJS](http://phantomjs.org/)
 * Auto-configured a promise-based DDP connection to the mirror
@@ -52,6 +52,8 @@ If you go ahead and change the file `/tests/cucumber/features/sample.feature` an
 
 ![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
 
+See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) below.
+
 ###Step Sugar
 
 Meteor Cucumber uses [Cuke Monkey](https://github.com/xolvio/cuke-monkey) which gives you some sugar
@@ -72,7 +74,7 @@ this.browser.
   getTitle().should.become(expectedTitle).and.notify(callback);
 ```
 
-Notice the prose uses chai-as-promised instead of dealing with callback nests.
+Notice the prose uses chai-as-promised instead of dealing with callback nesting.
 
 IMPORTANT: A gotcha to look out for is to be sure to use `and.notify(callback)` instead of using
 WebdriverIO's `.call(callback)`. This is because Cucumber doesn't support Promises/A+ (yet). This
@@ -89,6 +91,9 @@ You have a DDP connection pre-connected to the mirror that you can access like t
 ```
 this.ddp.call('yourMethod', [], callback);
 ```
+
+Be mindful that the signature for the DDP call is not the same as `Meteor.call` but is more like
+`Meteor.apply`. You have to provide an arguments array even if you're not passing any parameters.
 
 You can use this connection to either perform API-level end-to-end testing, or to use in conjunction
 with fixtures to clear the mirror database or to setup test-data (see [Fixtures](fixtures) below)
@@ -348,8 +353,10 @@ need the main app anyway. Typically users were using Meteor.DDP, but you can now
 instead which is pre-connected to the mirror. See above for details.
 
 ###No World object
-Cuke-monkey already creates and initializes a simple world object (see here). This means no more
-`helper.world.browser`, instead you can just replace all those calls with `this.browser`.
+Cuke-monkey already creates and initializes a simple world object
+((see here)[https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47]).
+This means no more `helper.world.browser`, instead you can just replace all those calls with
+`this.browser`.
 
 If you need a World object, please get in touch by reporting an issue and letting us know what
 you're trying to do.
