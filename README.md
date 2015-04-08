@@ -44,13 +44,13 @@ tests
 
 And you should also see this in the reporter:
 
-![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/tree/master/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
+![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
 
 Don't worry, the failure is by design to encourage you to always start with a failing specification.
 If you go ahead and change the file `/tests/cucumber/features/sample.feature` and replace
 "intentional failure" with the actual title of your site, you should see this:
 
-![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/tree/master/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
+![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
 
 ###Step Sugar
 
@@ -259,7 +259,7 @@ Feature: Author a Website
 
 2) Upon saving the file you will see this in the log:
 
-![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/tree/master/test-app/public/not_implemented.png "Not Implemented")
+![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/not_implemented.png "Not Implemented")
 
 
 3) You then take these conveniently generated step definition snippets write the the code to
@@ -289,7 +289,7 @@ this.Then(/^I should see the heading "([^"]*)"$/, function (expectedTitle, callb
 4) Upon saving you should see a failing test indicator either in the Velocity HTML reporter or the
 console:
 
-![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/tree/master/test-app/public/failed_step.png "Failed Specs")
+![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/failed_step.png "Failed Specs")
 
 5) You then write the actualizing code to make the above steps work:
 ```handlebars
@@ -317,7 +317,7 @@ if (Meteor.isClient) {
 
 6) Now you'll see a passing test indicator:
 
-![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/tree/master/test-app/public/passing_specs.png "Passing Specs")
+![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/passing_specs.png "Passing Specs")
 
 7. You now write another scenario or feature by going back to step 1.
 
