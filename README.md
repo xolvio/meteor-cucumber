@@ -10,7 +10,7 @@ allows you to define the behaviour of your app using plain text. See below for m
 examples.
 
 ##Features
-* Uses a Promises enabled fork of CucumberJS (soon)
+* CucumberJS with Promises/A+ support
 * Includes [Chai](http://chaijs.com/) & [Chai-as-promised](https://github.com/domenic/chai-as-promised/) promise based assertions by default
 * Auto-configured [WebdriverIO](http://webdriver.io/) with [PhantomJS](http://phantomjs.org/)
 * Auto-configured a promise-based DDP connection to the mirror
@@ -22,7 +22,7 @@ examples.
 
 ##Installation
 ```sh
-meteor add xolvio:cucumber@0.6.0-rc.7
+meteor add xolvio:cucumber@0.6.0-rc.8
 ```
 
 ##Usage
@@ -357,7 +357,7 @@ need the main app anyway. Typically users were using Meteor.DDP, but you can now
 instead which is pre-connected to the mirror. [See the DDP section above](https://github.com/xolvio/meteor-cucumber#ddp) for details.
 
 ###No World object
-Cuke-monkey already creates and initializes a (simple world object)[https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47].
+Cuke-monkey already creates and initializes a [simple world object](https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47).
 This means no more `helper.world.browser`, instead you can just replace all those calls with
 `this.browser`.
 
