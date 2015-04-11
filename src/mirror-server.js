@@ -14,8 +14,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   var FRAMEWORK_NAME = 'cucumber';
   var BINARY = process.env.CUKE_MONKEY_PATH || Npm.require('cuke-monkey').bin;
-  if (process.env.NODE_ENV !== 'development' || !process.env.IS_MIRROR ||
-    process.env[FRAMEWORK_NAME.toUpperCase()] === '0' || process.env.VELOCITY === '0') {
+  if (
+    process.env.NODE_ENV !== 'development' || !process.env.IS_MIRROR ||
+    process.env[FRAMEWORK_NAME.toUpperCase()] === '0' ||
+    process.env.VELOCITY === '0' ||
+    process.env.FRAMEWORK.indexOf(FRAMEWORK_NAME) !== 0
+  ) {
     return;
   }
 
