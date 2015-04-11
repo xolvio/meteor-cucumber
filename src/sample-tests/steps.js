@@ -4,24 +4,25 @@
 
   module.exports = function () {
 
-    // Use normal require here, cucumber is NOT run in a Meteor context (by design)
+    // You can use normal require here, cucumber is NOT run in a Meteor context (by design)
     var url = require('url');
 
-    this.Given(/^I am on the home page$/, function (callback) {
-      this.ddp.call('reset', [], callback);
+    this.Given(/^I am a new user$/, function () {
+      // no callbacks! DDP has been promisified so you can just return it
+      return this.ddp.callAsync('reset', []); // this.ddp is a connection to the mirror
     });
 
-    this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
-      // process.env.HOST always points to the mirror
-      this.browser.
-        url(url.resolve(process.env.HOST, relativePath)).
-        call(callback);
+    this.When(/^I navigate to "([^"]*)"$/, function (relativePath) {
+      // WebdriverIO supports Promises/A+ out the box, so you can return that too
+      return this.browser. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
+        url(url.resolve(process.env.HOST, relativePath)); // process.env.HOST always points to the mirror
     });
 
-    this.Then(/^I should see the title of "([^"]*)"$/, function (expectedTitle, callback) {
-      // you can use chai-as-promised, see here: https://github.com/domenic/chai-as-promised/
-      this.browser.
-        getTitle().should.become(expectedTitle).and.notify(callback);
+    this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle) {
+      // you can use chai-as-promised in step definitions also
+      return this.browser.
+        waitForVisible('h1'). // WebdriverIO chain-able promise magic
+        getTitle().should.become(expectedTitle);
     });
 
   };

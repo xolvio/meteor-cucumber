@@ -9,6 +9,6 @@ Feature: One-liner description of this feature
   /tests/features/step_definitions/steps.js
 
   Scenario:
-    Given I am on the home page
+    Given I am a new user
     When I navigate to "/"
-    Then I should see the title of "intentional failure"
+    Then I should see the title "intentional failure"
