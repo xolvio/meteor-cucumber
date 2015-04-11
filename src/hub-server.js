@@ -40,7 +40,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       framework: FRAMEWORK_NAME,
       args: ['--raw-logs'],
       testsPath: path.join(FRAMEWORK_NAME, 'fixtures'),
-      nodes: process.env.CUCUMBER_NODES ? process.env.CUCUMBER_NODES : 1
+      nodes: process.env.CUCUMBER_NODES ? parseInt(process.env.CUCUMBER_NODES) : 1
     });
 
     var initOnce = _.once(Meteor.bindEnvironment(_init));
