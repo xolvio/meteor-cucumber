@@ -137,22 +137,22 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
 
     if (process.env.HUB_HOST) {
-      args.push('--host=' + process.env.SELENIUM_BROWSER);
+      args.push('--host=' + process.env.HUB_HOST);
     }
     if (process.env.HUB_PORT) {
-      args.push('--port=' + process.env.SELENIUM_BROWSER);
+      args.push('--port=' + process.env.HUB_PORT);
     }
     if (process.env.HUB_USER) {
-      args.push('--user=' + process.env.SELENIUM_BROWSER);
+      args.push('--user=' + process.env.HUB_USER);
     }
     if (process.env.HUB_KEY) {
-      args.push('--key=' + process.env.SELENIUM_BROWSER);
+      args.push('--key=' + process.env.HUB_KEY);
     }
     if (process.env.HUB_PLATFORM) {
-      args.push('--platform=' + process.env.SELENIUM_BROWSER);
+      args.push('--platform=' + process.env.HUB_PLATFORM);
     }
     if (process.env.HUB_VERSION) {
-      args.push('--version=' + process.env.SELENIUM_BROWSER);
+      args.push('--version=' + process.env.HUB_VERSION);
     }
 
 
