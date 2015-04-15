@@ -24,7 +24,7 @@
     api.use([
       'underscore',
       'http',
-      'velocity:core@0.6.0-rc.7',
+      'velocity:core@0.6.0',
       'velocity:shim@0.1.0'
     ], ['server', 'client']);
     api.use([
