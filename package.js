@@ -12,9 +12,9 @@
   });
 
   Npm.depends({
-    'cuke-monkey': '0.3.0',
+    'cuke-monkey': '0.3.1',
     'colors': '1.0.3',
-    'fs-extra': '0.17.0'
+    'fs-extra': '0.18.0'
   });
 
   Package.onUse(function (api) {
