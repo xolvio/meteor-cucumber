@@ -12,17 +12,18 @@
       return this.ddp.callAsync('reset', []); // this.ddp is a connection to the mirror
     });
 
-    this.When(/^I navigate to "([^"]*)"$/, function (relativePath) {
+    this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
       // WebdriverIO supports Promises/A+ out the box, so you can return that too
-      return this.browser. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
-        url(url.resolve(process.env.HOST, relativePath)); // process.env.HOST always points to the mirror
+      this.browser. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
+        url(url.resolve(process.env.HOST, relativePath)). // process.env.HOST always points to the mirror
+        call(callback);
     });
 
-    this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle) {
+    this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle, callback) {
       // you can use chai-as-promised in step definitions also
-      return this.browser.
+      this.browser.
         waitForVisible('h1'). // WebdriverIO chain-able promise magic
-        getTitle().should.become(expectedTitle);
+        getTitle().should.become(expectedTitle).and.notify(callback);
     });
 
   };
