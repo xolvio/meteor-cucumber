@@ -10,7 +10,7 @@ allows you to define the behaviour of your app using plain text. See below for m
 examples.
 
 ##Features
-* CucumberJS with Promises/A+ support
+* CucumberJS with Promises/A+ support (mostly ready)
 * Includes [Chai](http://chaijs.com/) & [Chai-as-promised](https://github.com/domenic/chai-as-promised/) promise based assertions by default
 * Auto-configured [WebdriverIO](http://webdriver.io/) with [PhantomJS](http://phantomjs.org/)
 * Auto-configured a promise-based DDP connection to the mirror
@@ -22,7 +22,7 @@ examples.
 
 ##Installation
 ```sh
-meteor add xolvio:cucumber@0.6.0-rc.8
+meteor add xolvio:cucumber
 ```
 
 ##Usage
