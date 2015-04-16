@@ -1,15 +1,16 @@
-## [>> BREAKING CHANGES in v0.6.0 - See Below <<](#breaking-changes)
+# Meteor Cucumber
 
-#Meteor Cucumber
+This package gives you Cucumber Velocity framework so you can do BDD with Meteor.
 
-This package gives you Cucumber for Meteor using Velocity. Reactive BDD for the win!
+## What is Cucumber?
 
-##What is Cucumber?
 Cucumber is an open-source Behaviour-Driven Development (BDD) tool popular in Agile circles. It
 allows you to define the behaviour of your app using plain text. See below for more details and
 examples.
 
-##Features
+## [>> BREAKING CHANGES in v0.6.0 - See Below <<](#breaking-changes)
+
+## Features
 * CucumberJS with Promises/A+ support (mostly ready)
 * Includes [Chai](http://chaijs.com/) & [Chai-as-promised](https://github.com/domenic/chai-as-promised/) promise based assertions by default
 * Auto-configured [WebdriverIO](http://webdriver.io/) with [PhantomJS](http://phantomjs.org/)
@@ -20,12 +21,12 @@ examples.
 * **Experimental** Parallel testing support (see the [super fast e2e testing talk](https://www.youtube.com/watch?v=83dBtU6qy6c))
 
 
-##Installation
+## Installation
 ```sh
 meteor add xolvio:cucumber
 ```
 
-##Usage
+## Usage
 
 ###Basic
 After adding the package, click the 'Add cucumber sample tests' button in the HTML reporter.
@@ -59,13 +60,13 @@ See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) be
 Meteor Cucumber uses [Cuke Monkey](https://github.com/xolvio/cuke-monkey) which gives you some sugar
 inside the step definitions.
 
-####Chai / Chai-as-Promised
+#### Chai / Chai-as-Promised
 
 [Chai](http://chaijs.com) and [Chai-as-Promised](https://github.com/domenic/chai-as-promised/) have
 been wired in both into the steps (globally) and integrated with WebdriverIO. This means you should
 be able to perform assert from any context.
 
-####WebdriverIO
+#### WebdriverIO
 Cuke Monkey, and therefore Meteor Cucumber, use the excellent [WebdriverIO](http://webdriver.io/)
 and this comes pre-configured with PhantomJS by default and is available for you to use like this:
 
@@ -86,7 +87,7 @@ destroyed, like a hook.
 
 If you wish to use real browsers, see the [WebdriverIO Options](webdriverio-options) below.
 
-####DDP
+#### DDP
 You have a DDP connection pre-connected to the mirror that you can access like this:
 ```
 this.ddp.call('yourMethod', [], callback);
@@ -193,7 +194,7 @@ cd ../..
 meteor --test --once
 ```
 
-##Configuration
+## Configuration
 You can configure settings using environment variables. These are available:
 
 ###Cucumber Options
@@ -203,7 +204,7 @@ You can configure settings using environment variables. These are available:
 
 `CUCUMBER_TAGS='@mytag'`
 
-####Experimental: Parallel testing
+#### Experimental: Parallel testing
 To enable this mode, you need to set this environment variable:
 `CUCUMBER_NODES=4`
 
@@ -223,13 +224,13 @@ it will be awesome!
 By default, WebdriverIO is wired up with PhantomJS. You can however run it locally with any other
 locally installed browser using Selenium or remotely on SauceLabs / Selenium Grid like this:
 
-####Selenium
+#### Selenium
 `SELENIUM_BROWSER=firefox | chrome | phantomjs (default)`
 
 Note: Selenium comes bundled with a driver for firefox. For other browsers you will have to download those drivers.
 [See the full list of 3rd party bindings](http://www.seleniumhq.org/download/).
 
-####SauceLabs / Selenium Grid
+#### SauceLabs / Selenium Grid
 
 `HUB_HOST=ondemand.saucelabs.com | localhost (default)`
 
@@ -243,7 +244,7 @@ Note: Selenium comes bundled with a driver for firefox. For other browsers you w
 
 `HUB_VERSION=35`
 
-##Example of BDD with Meteor
+## Example of BDD with Meteor
 
 Here's an example of doing BDD with Meteor + Cucumber:
 
@@ -327,7 +328,7 @@ if (Meteor.isClient) {
 7. You now write another scenario or feature by going back to step 1.
 
 
-##Further Reading
+## Further Reading
 
 Here are some additional resources about Cucumber and BDD:
 * The official [cukes.info](https://cukes.info/) website
@@ -340,12 +341,12 @@ Books:
 * [The Cucumber Book](https://pragprog.com/book/hwcuc/the-cucumber-book) by Matt Wynne and Aslak Hellesøy
 * [Specification by Example](http://www.manning.com/adzic/) by Gojko Adzic (Use this code: cukes38sbe for 38% off)
 
-##Example Meteor Projects
+## Example Meteor Projects
 
 * [Letterpress](https://github.com/xolvio/Letterpress)
 * [Leaderboard Cucumber](https://github.com/meteor-velocity/velocity-examples/tree/master/leaderboard-cucumber)
 
-##Breaking Changes
+## Breaking Changes
 
 ###No more test-proxy package
 The latest Velocity 0.6.0 release removed the `test-proxy` package. After you update, please be sure

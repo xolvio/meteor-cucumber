@@ -5,10 +5,9 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.6.0',
+    version: '0.6.2',
     git: 'git@github.com:xolvio/meteor-cucumber.git',
-    debugOnly: true,
-    documentation: null
+    debugOnly: true
   });
 
   Npm.depends({

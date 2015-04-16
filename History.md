@@ -1,3 +1,7 @@
+#0.6.1 - 0.6.2
+
+* Attempting to add docs to atmosphere
+
 #0.6.0
 
 * Increased stability by using cuke-monkey npm package
