@@ -99,7 +99,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push(feature.absolutePath);
     } else {
       console.log('[xolvio:cucumber] Cucumber is running');
-      _velocityConnection.call('velocity/reports/reset');
+      _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
     }
 
     args.push('-r');
