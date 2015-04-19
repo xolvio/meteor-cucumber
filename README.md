@@ -28,7 +28,7 @@ meteor add xolvio:cucumber
 
 ## Usage
 
-###Basic
+### Basic
 After adding the package, click the 'Add cucumber sample tests' button in the HTML reporter.
 This will create these files in your project:
 
@@ -55,7 +55,7 @@ If you go ahead and change the file `/tests/cucumber/features/sample.feature` an
 
 See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) below.
 
-###Step Sugar
+### Step Sugar
 
 Meteor Cucumber uses [Cuke Monkey](https://github.com/xolvio/cuke-monkey) which gives you some sugar
 inside the step definitions.
@@ -149,7 +149,7 @@ The `debugOnly` flag instruct Meteor not to bundle this package when building, w
 ensure this package does not make it to production. You can now define all your fixtures in this
 package.
 
-###Logging
+### Logging
 Logs from the mirror and `cucumber` can be seen in the log file here:
 
 `<your_project_dir>/.meteor/local/log/cucumber.log`
@@ -158,7 +158,7 @@ It's advised that you monitor this log file with a command like
 
 `tail -f .meteor/local/log/cucumber.log`
 
-###Adding NPM Modules
+### Adding NPM Modules
 You might want to use npm packages inside your steps, like underscore for instance. To do this, you
 can add a `package.json` file inside your `/tests/cucumber` directory and include npm modules like
 you would in any normal node app. Here's an example:
@@ -179,7 +179,7 @@ you would in any normal node app. Here's an example:
 Note you still need to manually run `npm install` yourself currently. This may change in future
 versions of this package.
 
-###Continuous Integration
+### Continuous Integration
 Velocity takes care of CI for us by extending the `meteor` command with `meteor --test --once`.
 
 To run your tests for Cucumber you just need to be sure any npm dependencies are installed on the CI
@@ -197,7 +197,7 @@ meteor --test --once
 ## Configuration
 You can configure settings using environment variables. These are available:
 
-###Cucumber Options
+### Cucumber Options
 `CUCUMBER_FORMAT=summary | json | progress | pretty (default)`
 
 `CUCUMBER_COFFEE_SNIPPETS=1`
@@ -216,7 +216,7 @@ practise anyway.
 WARNING: This mode is under development and it may or may not work for you! When it does work for everyone,
 it will be awesome!
 
-###WebdriverIO Options
+### WebdriverIO Options
 `WD_LOG=command/debug/silent (default)`
 
 `WD_TIMEOUT_ASYNC_SCRIPT=10000 (default)`
@@ -348,20 +348,32 @@ Books:
 
 ## Breaking Changes
 
-###No more test-proxy package
+### No more test-proxy package
 The latest Velocity 0.6.0 release removed the `test-proxy` package. After you update, please be sure
 to remove this package from your `/packages` folder.
 
-###Cukes now runs outside the Meteor context
+### No more xolvio:webdriver
+You need to delete the xolvio:webdriver package as this is now built-in using cuke-monkey
+
+### Cukes now runs outside the Meteor context
 You no longer have access to the main Meteor app from within your step definitions. You should never
 need the main app anyway. Typically users were using Meteor.DDP, but you can now use `this.ddp`
 instead which is pre-connected to the mirror. [See the DDP section above](https://github.com/xolvio/meteor-cucumber#ddp) for details.
 
-###No World object
+### No World object / world.browser / world.ddp
 Cuke-monkey already creates and initializes a [simple world object](https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47).
 This means no more `helper.world.browser`, instead you can just replace all those calls with
 `this.browser`.
 
+Same goes for DDP, you now use `this.ddp` and be sure to put all params in an array,
+so instead of `this.ddp.call('myMethod', param1, param2, callback)` you need to use
+`this.ddp.call('myMethod', [param1, param2], callback)`. If your method doesn't take params, you
+must still pass an empty array.
+
 If you need a World object, please get in touch by reporting an issue and letting us know what
 you're trying to do.
 
+### Remove your hooks
+If you are using the boilerplate hooks that the previous version of meteor-cucumber used, you should
+get rid of the hooks file. If you are doing any custom hooks, you should extract those outside the
+boilerplate file and use separately.
