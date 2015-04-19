@@ -1,3 +1,7 @@
+#0.6.5
+
+* Bumping cuke-monkey version
+
 #0.6.4
 
 * Changes to app/test code will restart even stale cucumber runs
