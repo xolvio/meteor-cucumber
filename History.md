@@ -1,3 +1,12 @@
+#0.6.4
+
+* Changes to app/test code will restart even stale cucumber runs
+* Improved process management. Phantom/Selenium are now killed on app/test code changes
+
+#0.6.3
+
+* Fixed console reporter issue
+
 #0.6.1 - 0.6.2
 
 * Attempting to add docs to atmosphere

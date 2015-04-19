@@ -26,7 +26,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   DEBUG && console.log('[xolvio:cucumber] Mirror server is initializing');
 
   var _velocityConnection,
-      _velocityTestFiles;
+      _velocityTestFiles,
+      _cukeMonkeyProc;
 
   Meteor.startup(function () {
 
@@ -40,7 +41,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     _velocityConnection.onReconnect = function () {
       DEBUG && console.log('[xolvio:cucumber] Connected to hub.');
-      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 300);
+      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 1000);
       _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
         added: debouncedRun,
         removed: debouncedRun,
@@ -54,17 +55,29 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         }
       }));
 
+      var killTheMonkeyAndExit = function() {
+        _killTheMonkey();
+        process.exit();
+      };
+
+      process.on('SIGTERM', killTheMonkeyAndExit); // when meteor server code changes
+      process.on('SIGINT', killTheMonkeyAndExit); // when the long running child process ends
+      process.on('exit', killTheMonkeyAndExit); // other (SIGHUP? SIGBREAK? haven't been tested)
+
     };
 
   });
 
-  var _isRunning = false;
+  function _killTheMonkey () {
+    if (!!_cukeMonkeyProc && !_cukeMonkeyProc.killed) {
+      _cukeMonkeyProc.kill('SIGTERM');
+      _cukeMonkeyProc.killed = true;
+    }
+  }
 
   function _findAndRun () {
-    if (_isRunning) {
-      return;
-    }
-    _isRunning = true;
+
+    _killTheMonkey();
 
     var findAndRun = function () {
       var feature = _velocityTestFiles.findOne({
@@ -74,8 +87,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       if (feature) {
         _velocityTestFiles.update(feature._id, {$set: {status: 'DOING'}});
         _run(feature, findAndRun);
-      } else {
-        _isRunning = false;
       }
     };
 
@@ -84,14 +95,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       findAndRun();
     } else {
       DEBUG && console.log('[xolvio:cucumber] Running in batch-features mode.');
-      _run(null, function () {
-        _isRunning = false;
-      });
+      _run();
     }
 
   }
 
-  function _run (feature, callback) {
+  function _run (feature) {
 
     var args = [];
     if (feature) {
@@ -132,7 +141,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--browser=' + process.env.SELENIUM_BROWSER);
     }
 
-    if (DEBUG) {
+    if (DEBUG || process.env.DEBUG) {
       args.push('--debug');
     }
 
@@ -155,9 +164,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--version=' + process.env.HUB_VERSION);
     }
 
-
-
-
     DEBUG && console.log('[xolvio:cucumber] Running', BINARY, args);
     fs.chmodSync(BINARY, parseInt('555', 8));
     var nodePath = process.execPath;
@@ -170,15 +176,15 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
       env: env
     };
-    var proc = Npm.require('child_process').spawn(BINARY, args, spawnOptions);
+    _cukeMonkeyProc = Npm.require('child_process').spawn(BINARY, args, spawnOptions);
 
-    proc.stdout.on('data', function (data) {
+    _cukeMonkeyProc.stdout.on('data', function (data) {
       data = data.toString().replace(process.env.VELOCITY_MAIN_APP_PATH, '');
       process.stdout.write(data);
     });
-    proc.stderr.pipe(process.stderr);
+    _cukeMonkeyProc.stderr.pipe(process.stderr);
 
-    proc.on('message', Meteor.bindEnvironment(function (json) {
+    _cukeMonkeyProc.on('message', Meteor.bindEnvironment(function (json) {
       _processFeatures(JSON.parse(json));
       if (feature) {
         _velocityTestFiles.update(feature._id, {$set: {status: 'DONE'}});
@@ -187,14 +193,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }
     }));
 
-    proc.on('close', Meteor.bindEnvironment(function (exit, signal) {
+    _cukeMonkeyProc.on('close', Meteor.bindEnvironment(function (exit, signal) {
       DEBUG && console.log('[xolvio:cucumber] cuke-monkey completed with exit code', exit, signal);
-      callback();
     }));
 
-    process.on('exit', function () {
-      proc.kill();
-    });
   }
 
   function _processFeatures (features) {
