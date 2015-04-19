@@ -168,6 +168,7 @@ you would in any normal node app. Here's an example:
   "name": "cucumber-tests",
   "version": "1.0.0",
   "description": "Dependencies for our Cucumber automation layer",
+  "private": true,
   "dependencies": {
     "fs-extra": "0.18.0",
     "underscore": "^1.8.3"
