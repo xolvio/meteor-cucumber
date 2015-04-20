@@ -1,3 +1,7 @@
+#0.6.6
+
+* Ignore files in tests/cucumber/node_modules
+
 #0.6.5
 
 * Bumping cuke-monkey version

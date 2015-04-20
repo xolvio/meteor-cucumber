@@ -9,7 +9,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   var path = Npm.require('path');
 
   var FRAMEWORK_NAME = 'cucumber',
-      FRAMEWORK_REGEX = FRAMEWORK_NAME + '/.+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
+      FRAMEWORK_REGEX = '^tests/' + FRAMEWORK_NAME + '/((?!node_modules/).)+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
       SAMPLE_TESTS = [{
         contents: Assets.getText(path.join('src', 'sample-tests', 'feature.feature')),
         path: path.join(FRAMEWORK_NAME, 'features', 'sample.feature')
