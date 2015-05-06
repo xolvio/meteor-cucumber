@@ -84,6 +84,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
+  // TODO add callback here so findAndRun can be run again after a worker has finished running
   function _run (feature) {
     if (feature) {
       console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath);
@@ -95,6 +96,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       try {
         HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
+        // TODO modify cuke-monkey server to take a param to run one feature only
         var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
         var results = JSON.parse(response.content);
         if (results.length === 0) {
@@ -120,6 +122,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   function _startTheMonkey () {
 
     DEBUG && console.log('[xolvio:cucumber] Starting the monkey');
+    // TODO add node ID to cuke monkey instance
     _cukeMonkeyProc = new sanjo.LongRunningChildProcess('cukeMonkey');
     if (_cukeMonkeyProc.isRunning()) {
       DEBUG && console.log('[xolvio:cucumber] The monkey is already running');
