@@ -181,29 +181,50 @@ Note you still need to manually run `npm install` yourself currently. This may c
 versions of this package.
 
 ### Continuous Integration
-Velocity takes care of CI for us by extending the `meteor` command with `meteor --test --once`.
+
+On the CI server, just run:
+`VELOCITY_CI=1 meteor --test`
+
+Velocity takes care of CI for us by extending the `meteor` command with `meteor --test`. Xolv.io
+Cucumber needs to know that you are running in CI mode so it can run all tags and not just `@dev`
+tags. This is currently done by setting the `CI` environment variable to `1`. You can also
+omit the `CI` variable and specify custom tags to run. See the
+[cucumber options below](#cucumber-options).
 
 To run your tests for Cucumber you just need to be sure any npm dependencies are installed on the CI
 server. So if you have created an npm package file under `tests/cucumber/package.json`, then you
-need to run `npm install` prior to running `meteor --test --once`
+need to run `npm install` prior to running `meteor --test`
 
 Here's an example CI script:
 ```
 cd tests/cucumber
 npm install
 cd ../..
-meteor --test --once
+export CI=1
+meteor --test
 ```
 
 ## Configuration
 You can configure settings using environment variables. These are available:
+
+### Cuke Monkey Options
+This package is somewhat opinionated in its outputs and options, however you have complete control
+over how you want the underlying tools to behave. The tool that is doing all the work is
+[cuke-monkey](https://github.com/xolvio/cuke-monkey). You can directly pass command line switches to
+cuke-monkey as follows:
+
+`MONKEY_OPTIONS='--format=progress --browser=chrome ...'`
+
+See the [cuke-monkey](https://github.com/xolvio/cuke-monkey) docs for details.
+
+Be mindful that using this is an advanced option that bypasses the defaults in xolvio:cucumber.
 
 ### Cucumber Options
 `CUCUMBER_FORMAT=summary | json | progress | pretty (default)`
 
 `CUCUMBER_COFFEE_SNIPPETS=1`
 
-`CUCUMBER_TAGS='@mytag'`
+`CUCUMBER_TAGS=@mytag,@myOtherTag,~@notThisTag`
 
 #### Experimental: Parallel testing
 To enable this mode, you need to set this environment variable:
@@ -214,8 +235,8 @@ instances. These nodes will run through a feature at a time until all the featur
 For this more to work best, it's advised that you keep your features short, which is generally good
 practise anyway.
 
-WARNING: This mode is under development and it may or may not work for you! When it does work for everyone,
-it will be awesome!
+WARNING: This mode is under development and it may or may not work for you! When it does work for
+everyone, it will be awesome!
 
 ### WebdriverIO Options
 `WD_LOG=command/debug/silent (default)`
