@@ -6,4 +6,4 @@
 
 meteor-platform
 xolvio:cucumber
-velocity:console-reporter
+#velocity:console-reporter
