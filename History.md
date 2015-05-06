@@ -1,3 +1,11 @@
+#0.7.0
+
+* Now using a long-running child process for cuke-monkey
+* Moved process management logic to cuke-monkey
+* Added a CUKE_MONKEY_SWITCHES env var to pass raw switches to cuke monkey
+* Now watches @dev tags by default. VELOCITY_CI env var can be used on CI severs to run all tags
+* Added direct cuke monkey arg passing
+
 #0.6.5
 
 * Bumping cuke-monkey version
