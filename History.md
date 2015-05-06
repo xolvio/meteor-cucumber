@@ -6,6 +6,10 @@
 * Now watches @dev tags by default. VELOCITY_CI env var can be used on CI severs to run all tags
 * Added direct cuke monkey arg passing
 
+#0.6.6
+
+* Ignore files in tests/cucumber/node_modules
+
 #0.6.5
 
 * Bumping cuke-monkey version
