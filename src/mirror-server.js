@@ -7,8 +7,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   'use strict';
 
   var path = Npm.require('path'),
-      fs = Npm.require('fs-extra'),
-      mkdirp = Npm.require('mkdirp');
+      fs = Npm.require('fs-extra');
 
   // this library extends the string prototype
   Npm.require('colors');
@@ -168,7 +167,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME, '.screenshots');
     DEBUG && console.log('[xolvio:cucumber] Screenshots dir is', _screenshotsDir);
     var ssDir = path.resolve(_screenshotsDir);
-    mkdirp.sync(ssDir);
     return ssDir;
   }
 
