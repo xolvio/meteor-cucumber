@@ -200,7 +200,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (process.env.CUCUMBER_TAGS) {
       args.push('--tags=' + process.env.CUCUMBER_TAGS);
-    } else if (!process.env.CI) {
+    } else if (!process.env.VELOCITY_CI) {
       args.push('--tags=@dev');
     } else {
       args.push('--tags=~@ignore');

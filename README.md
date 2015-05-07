@@ -183,13 +183,12 @@ versions of this package.
 ### Continuous Integration
 
 On the CI server, just run:
-`VELOCITY_CI=1 meteor --test`
+`meteor --test`
 
 Velocity takes care of CI for us by extending the `meteor` command with `meteor --test`. Xolv.io
-Cucumber needs to know that you are running in CI mode so it can run all tags and not just `@dev`
-tags. This is currently done by setting the `CI` environment variable to `1`. You can also
-omit the `CI` variable and specify custom tags to run. See the
-[cucumber options below](#cucumber-options).
+Cucumber knows that you are running in CI mode through a `VELOCITY_CI` environmenrt variable that
+Velocity sets in `--test` mode so it can run all tags and not just `@dev` tags.See the
+[cucumber options below](#cucumber-options) for custom tags.
 
 To run your tests for Cucumber you just need to be sure any npm dependencies are installed on the CI
 server. So if you have created an npm package file under `tests/cucumber/package.json`, then you
@@ -200,7 +199,6 @@ Here's an example CI script:
 cd tests/cucumber
 npm install
 cd ../..
-export CI=1
 meteor --test
 ```
 
