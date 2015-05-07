@@ -322,6 +322,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         insertDots = false,
         DOTS = '  ...\n';
 
+    if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
+      return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
+        + ' timed out';
+    }
+
     try {
       _.each(errorMessage.split('\n'), function (line, index) {
         line = line.trim();
