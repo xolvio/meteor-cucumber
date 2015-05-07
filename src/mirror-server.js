@@ -6,8 +6,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
-  var path = Npm.require('path');
-  var fs = Npm.require('fs-extra');
+  var path = Npm.require('path'),
+      fs = Npm.require('fs-extra'),
+      mkdirp = Npm.require('mkdirp');
 
   // this library extends the string prototype
   Npm.require('colors');
@@ -162,6 +163,15 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     return process.env.CUCUMBER_SERVER_PORT ? process.env.CUCUMBER_SERVER_PORT : 8866;
   }
 
+  function _getScreenshotsDir () {
+    var _screenshotsDir = process.env.CUCUMBER_SCREENSHOTS_DIR ||
+      path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME, '.screenshots');
+    DEBUG && console.log('[xolvio:cucumber] Screenshots dir is', _screenshotsDir);
+    var ssDir = path.resolve(_screenshotsDir);
+    mkdirp.sync(ssDir);
+    return ssDir;
+  }
+
   function _getArgs () {
 
     var args = [];
@@ -183,6 +193,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }
       return args;
     }
+
+    args.push('--screenshotsPath=' + _getScreenshotsDir());
 
     if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
       args.push('--coffee');
