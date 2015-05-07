@@ -4,7 +4,7 @@
       "version": "1.0.3"
     },
     "cuke-monkey": {
-      "version": "0.5.1",
+      "version": "0.5.2",
       "dependencies": {
         "async": {
           "version": "0.9.0"
@@ -1073,14 +1073,6 @@
             "lodash": {
               "version": "2.4.2"
             },
-            "mkdirp": {
-              "version": "0.5.0",
-              "dependencies": {
-                "minimist": {
-                  "version": "0.0.8"
-                }
-              }
-            },
             "request": {
               "version": "2.55.0",
               "dependencies": {
@@ -1365,7 +1357,7 @@
               }
             },
             "URIjs": {
-              "version": "1.15.0"
+              "version": "1.15.1"
             },
             "whereis": {
               "version": "0.4.0"
@@ -2388,6 +2380,14 @@
               }
             }
           }
+        }
+      }
+    },
+    "mkdirp": {
+      "version": "0.5.0",
+      "dependencies": {
+        "minimist": {
+          "version": "0.0.8"
         }
       }
     }
