@@ -6,8 +6,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
-  var path = Npm.require('path'),
-      fs = Npm.require('fs-extra');
+  var path = Npm.require('path');
+  var fs = Npm.require('fs-extra');
+  var freeport = Npm.require('freeport');
 
   // this library extends the string prototype
   Npm.require('colors');
@@ -27,7 +28,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   var _velocityConnection,
       _velocityTestFiles,
-      _cukeMonkeyProc;
+      _cukeMonkeyProc,
+      _serverPort;
 
   Meteor.startup(function () {
 
@@ -67,14 +69,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
 
     var findAndRun = function () {
-      var feature = _velocityTestFiles.findOne({
-        targetFramework: FRAMEWORK_NAME,
-        status: 'TODO'
-      });
+      var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       if (feature) {
-        _velocityTestFiles.update(feature._id, {$set: {status: 'DOING'}});
         _run(feature, findAndRun);
       }
+
     };
 
     if (!!process.env.CUCUMBER_NODES) {
@@ -87,11 +86,22 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  // TODO add callback here so findAndRun can be run again after a worker has finished running
-  function _run (feature) {
+  function _run (feature, cb) {
     if (feature) {
-      console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath);
-      // TODO call cuke-monkey with a single file to run
+      console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath, " port ", _getServerPort());
+
+      var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
+
+      try {
+        var results = JSON.parse(response.content);
+      }
+      catch (error) {
+        console.log("[xolvio:cucumber] parsing json error ", error);
+      }
+      _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
+      _processFeatures(results);
+
+      cb && cb();
     } else {
       console.log('[xolvio:cucumber] Cucumber is running'.yellow);
       _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
@@ -99,7 +109,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       try {
         HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
-        // TODO modify cuke-monkey server to take a param to run one feature only
         var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
         var results = JSON.parse(response.content);
         if (results.length === 0) {
@@ -112,11 +121,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         return;
       }
 
-      if (feature) {
-        _velocityTestFiles.update(feature._id, {$set: {status: 'DONE'}});
-      } else {
-        _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
-      }
+      _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
 
     }
 
@@ -147,22 +152,31 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     };
 
     args.push('--server');
-    args.push('--serverPort=' + _getServerPort());
 
-    DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
 
-    _cukeMonkeyProc.spawn({
-      command: nodePath,
-      args: args,
-      options: spawnOptions
-    });
+    freeport(Meteor.bindEnvironment(function(err, port) {
+      _serverPort = port;
+      console.log("returnedport ", port);
+      args.push('--serverPort=' + _getServerPort());
 
-    DEBUG && console.log('[xolvio:cucumber] Cuke-Monkey process forked with pid', _cukeMonkeyProc.getPid());
+      console.log("[xolvio:cucumber] args for the monkey", args);
+
+      DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
+
+      _cukeMonkeyProc.spawn({
+        command: nodePath,
+        args: args,
+        options: spawnOptions
+      });
+
+      DEBUG && console.log('[xolvio:cucumber] Cuke-Monkey process forked with pid', _cukeMonkeyProc.getPid());
+
+    }))
 
   }
 
   function _getServerPort () {
-    return process.env.CUCUMBER_SERVER_PORT ? process.env.CUCUMBER_SERVER_PORT : 8866;
+      return _serverPort;
   }
 
   function _getScreenshotsDir () {
@@ -325,7 +339,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         insertDots = false,
         DOTS = '  ...\n';
 
-    if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
+    if (errorMessage.indexOf('[xolvio:cucumber] Timed out waiting for asynchronous') !== -1) {
       return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
         + ' timed out';
     }

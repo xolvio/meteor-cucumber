@@ -13,7 +13,8 @@
   Npm.depends({
     'cuke-monkey': '0.6.1',
     'colors': '1.0.3',
-    'fs-extra': '0.18.0'
+    'fs-extra': '0.18.0',
+    'freeport': '1.0.4'
   });
 
   Package.onUse(function (api) {
