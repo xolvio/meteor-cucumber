@@ -176,6 +176,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return _serverPort;
   }
 
+  function _getScreenshotsDir () {
+    var _screenshotsDir = process.env.CUCUMBER_SCREENSHOTS_DIR ||
+      path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME, '.screenshots');
+    DEBUG && console.log('[xolvio:cucumber] Screenshots dir is', _screenshotsDir);
+    var ssDir = path.resolve(_screenshotsDir);
+    return ssDir;
+  }
+
   function _getArgs () {
 
     var args = [];
@@ -197,6 +205,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }
       return args;
     }
+
+    args.push('--screenshotsPath=' + _getScreenshotsDir());
 
     if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
       args.push('--coffee');
@@ -323,6 +333,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     var msg = '',
         insertDots = false,
         DOTS = '  ...\n';
+
+    if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
+      return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
+        + ' timed out';
+    }
 
     try {
       _.each(errorMessage.split('\n'), function (line, index) {

@@ -226,6 +226,8 @@ Be mindful that using this is an advanced option that bypasses the defaults in x
 
 `CUCUMBER_TAGS=@mytag,@myOtherTag,~@notThisTag`
 
+`CUCUMBER_SCREENSHOTS_DIR=./tests/cucumber/.screenshots (default)`
+
 #### Experimental: Parallel testing
 To enable this mode, you need to set this environment variable:
 `CUCUMBER_NODES=4`
