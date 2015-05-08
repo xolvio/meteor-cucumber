@@ -29,7 +29,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   var _velocityConnection,
       _velocityTestFiles,
       _cukeMonkeyProc,
-      _serverPort;
+      _serverPort,
+      _runningParallelTest;
 
   Meteor.startup(function () {
 
@@ -64,10 +65,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   });
 
   function _findAndRun () {
-
     var findAndRun = function () {
       var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       if (feature) {
+        _runningParallelTest = true;
         _run(feature, findAndRun);
       }
 
@@ -75,7 +76,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (!!process.env.CUCUMBER_NODES) {
       DEBUG && console.log('[xolvio:cucumber] Running in split-features mode');
-      findAndRun();
+      !_runningParallelTest && findAndRun();
     } else {
       DEBUG && console.log('[xolvio:cucumber] Running in batch-features mode.');
       _run();
@@ -85,19 +86,28 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _run (feature, cb) {
     if (feature) {
+      var _error = false;
+
       console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath, " port ", _getServerPort());
 
-      var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
-
       try {
+        var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
         var results = JSON.parse(response.content);
+        _processFeatures(results);
       }
       catch (error) {
-        console.log("[xolvio:cucumber] parsing json error ", error);
+        console.error('[xolvio:cucumber] Bad response from cuke-monkey server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
+        _error = true;
       }
-      _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
-      _processFeatures(results);
 
+      if (_error) {
+        _velocityConnection.call('velocity/featureTestFailed', {featureId: feature._id});
+      }
+      else {
+        _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
+      }
+
+      _runningParallelTest = false;
       cb && cb();
     } else {
       console.log('[xolvio:cucumber] Cucumber is running'.yellow);
