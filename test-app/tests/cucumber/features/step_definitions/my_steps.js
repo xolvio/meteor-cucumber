@@ -7,13 +7,13 @@
     // You can use normal require here, cucumber is NOT run in a Meteor context (by design)
     var url = require('url');
 
-    this.Given(/^I have authored the site title as "([^"]*)"$/, function (title, callback) {
-      this.ddp.call('updateTitle', [title], callback); // this.ddp is a connection to the mirror
+    this.Given(/^I have authored the site title as "([^"]*)"$/, function (title) {
+      return this.mirror.call('updateTitle', title); // this.ddp is a connection to the mirror
     });
 
     this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
       this.browser. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
-        url(url.resolve(process.env.HOST, relativePath)). // process.env.HOST always points to the mirror
+        url(url.resolve(process.env.ROOT_URL, relativePath)). // process.env.ROOT_URL always points to the mirror
         call(callback);
     });
 

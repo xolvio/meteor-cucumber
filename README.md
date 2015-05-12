@@ -90,7 +90,7 @@ If you wish to use real browsers, see the [WebdriverIO Options](webdriverio-opti
 #### DDP
 You have a DDP connection pre-connected to the mirror that you can access like this:
 ```
-this.ddp.call('yourMethod', [], callback);
+this.mirror.call('yourMethod', [], callback);
 ```
 
 Be mindful that the signature for the DDP call is not the same as `Meteor.call` but is more like
@@ -124,7 +124,7 @@ Meteor.methods({
 ```javascript
 // /tests/cucumber/features/step_definitions/hooks.js
 this.Before(function (event, callback) {
-  global.ddp.call('reset', [], callback);
+  global.mirror.call('reset', [], callback);
 }
 ```
 
@@ -296,13 +296,13 @@ automate the scenario as concrete actions:
 ```javascript
 this.Given(/^I have authored the site title as "([^"]*)"$/, function (title, callback) {
   // this.ddp is a connection to the mirror available to you in all steps
-  this.ddp.call('updateTitle', [title], callback);
+  this.mirror.call('updateTitle', [title], callback);
 });
 
 this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
   // this.browser is a pre-configured WebdriverIO + PhantomJS instance
   this.browser.
-    url(url.resolve(process.env.HOST, relativePath)). // process.env.HOST points to the app
+    url(url.resolve(process.env.ROOT_URL, relativePath)). // process.env.HOST points to the app
     call(callback);
 });
 
@@ -388,8 +388,8 @@ This means no more `helper.world.browser`, instead you can just replace all thos
 `this.browser`.
 
 Same goes for DDP, you now use `this.ddp` and be sure to put all params in an array,
-so instead of `this.ddp.call('myMethod', param1, param2, callback)` you need to use
-`this.ddp.call('myMethod', [param1, param2], callback)`. If your method doesn't take params, you
+so instead of `this.mirror.call('myMethod', param1, param2, callback)` you need to use
+`this.mirror.call('myMethod', [param1, param2], callback)`. If your method doesn't take params, you
 must still pass an empty array.
 
 If you need a World object, please get in touch by reporting an issue and letting us know what

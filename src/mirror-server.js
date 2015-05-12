@@ -52,6 +52,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
       process.on('message', Meteor.bindEnvironment(function (message) {
+        DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
         if (message.refresh && message.refresh === 'client') {
           debouncedRun();
         }
@@ -62,6 +63,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   });
 
   function _findAndRun () {
+
+    DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
 
     var findAndRun = function () {
       var feature = _velocityTestFiles.findOne({
@@ -149,7 +152,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
 
     _cukeMonkeyProc.spawn({
-      command: BINARY,
+      command: nodePath,
       args: args,
       options: spawnOptions
     });
@@ -173,6 +176,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   function _getArgs () {
 
     var args = [];
+
+    args.push(BINARY);
 
     args.push('-r');
     args.push(path.join(process.env.VELOCITY_MAIN_APP_PATH, 'tests', 'cucumber', 'features'));
