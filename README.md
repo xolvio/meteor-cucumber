@@ -83,18 +83,19 @@ is something Xolv.io will be adding to Meteor Cucumber soon.
 
 Note you can also access the browser instance on the global object like this: `global.browser`. This
 is useful if you are trying to connect from a context where the world object may have been
-destroyed, like a hook.
+destroyed, like a hook. The same goes for `global.ddp`.
 
 If you wish to use real browsers, see the [WebdriverIO Options](webdriverio-options) below.
 
 #### DDP
 You have a DDP connection pre-connected to the mirror that you can access like this:
 ```
-this.mirror.call('yourMethod', [], callback);
+this.mirror.call('yourMethod', arg1, arg2, ..., callback);
+// or
+this.mirror.apply('yourMethod', [arg1, arg2, ...], callback);
 ```
 
-Be mindful that the signature for the DDP call is not the same as `Meteor.call` but is more like
-`Meteor.apply`. You have to provide an arguments array even if you're not passing any parameters.
+The signature for the mirror DDP call is the same as `Meteor.call` and `Meteor.apply`. 
 
 You can use this connection to either perform API-level end-to-end testing, or to use in conjunction
 with fixtures to clear the mirror database or to setup test-data (see [Fixtures](fixtures) below)
@@ -124,7 +125,7 @@ Meteor.methods({
 ```javascript
 // /tests/cucumber/features/step_definitions/hooks.js
 this.Before(function (event, callback) {
-  global.mirror.call('reset', [], callback);
+  this.mirror.call('reset', [], callback);
 }
 ```
 
