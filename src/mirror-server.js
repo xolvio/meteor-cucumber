@@ -66,12 +66,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   });
 
   function _findAndRun () {
-<<<<<<< HEAD
-
     DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
-
-=======
->>>>>>> 2fffee6... react to test changes only if not testing already. reset tests as TODO on failure
     var findAndRun = function () {
       var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       if (feature) {
