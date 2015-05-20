@@ -11,7 +11,7 @@ examples.
 ## [>> BREAKING CHANGES in v0.6.0 - See Below <<](#breaking-changes)
 
 ## Features
-* CucumberJS with Promises/A+ support (mostly ready)
+* CucumberJS with Promise support (mostly ready)
 * Includes [Chai](http://chaijs.com/) & [Chai-as-promised](https://github.com/domenic/chai-as-promised/) promise based assertions by default
 * Auto-configured [WebdriverIO](http://webdriver.io/) with [PhantomJS](http://phantomjs.org/)
 * Auto-configured a promise-based DDP connection to the mirror
@@ -57,7 +57,7 @@ See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) be
 
 ### Step Sugar
 
-Meteor Cucumber uses [Cuke Monkey](https://github.com/xolvio/cuke-monkey) which gives you some sugar
+Meteor Cucumber uses [Chimp](https://github.com/xolvio/Chimp) which gives you some sugar
 inside the step definitions.
 
 #### Chai / Chai-as-Promised
@@ -67,11 +67,11 @@ been wired in both into the steps (globally) and integrated with WebdriverIO. Th
 be able to perform assert from any context.
 
 #### WebdriverIO
-Cuke Monkey, and therefore Meteor Cucumber, use the excellent [WebdriverIO](http://webdriver.io/)
+Chimp, and therefore Meteor Cucumber, use the excellent [WebdriverIO](http://webdriver.io/)
 and this comes pre-configured with PhantomJS by default and is available for you to use like this:
 
 ```
-this.browser.
+this.client.
   getTitle().should.become(expectedTitle).and.notify(callback);
 ```
 
@@ -81,30 +81,58 @@ IMPORTANT: A gotcha to look out for is to be sure to use `and.notify(callback)` 
 WebdriverIO's `.call(callback)`. This is because Cucumber doesn't support Promises/A+ (yet). This
 is something Xolv.io will be adding to Meteor Cucumber soon.
 
+If you want to call a Meteor method from the browser, you can do so like this:
+
+```
+// From browser, call server-side method and test response with `assert`.
+this.client.executeAsync(function (done) {
+  Meteor.call('tester', function (err, res) {
+    done(res); // Don't pass `err` into this as the first argument!
+  });
+}, function (err, res) {
+  assert.equal(res.value, 'yes');
+  callback();
+});
+```
+
+The same mechanism above can be used to perform tasks like `Meteor.loginWithPassword` etc. For more
+details on how to use the `executeAsync` command, refer to the 
+[WebdriverIO docs](http://webdriver.io/api/protocol/executeAsync.html).
+
 Note you can also access the browser instance on the global object like this: `global.browser`. This
 is useful if you are trying to connect from a context where the world object may have been
-destroyed, like a hook. The same goes for `global.ddp`.
+destroyed, like a hook.
 
 If you wish to use real browsers, see the [WebdriverIO Options](webdriverio-options) below.
 
 #### DDP
-You have a DDP connection pre-connected to the mirror that you can access like this:
+You have a DDP connection pre-connected to the mirror server that you can access like this:
 ```
-this.mirror.call('yourMethod', arg1, arg2, ..., callback);
+this.server.call('yourMethod', arg1, arg2, ..., callback);
 // or
-this.mirror.apply('yourMethod', [arg1, arg2, ...], callback);
+this.server.apply('yourMethod', [arg1, arg2, ...], callback);
 ```
 
-The signature for the mirror DDP call is the same as `Meteor.call` and `Meteor.apply`. 
+*Note that you can use `this.server` or `this.mirror`. They are both an alias to `this.ddp`.*
+
+The signature for the DDP call is the same as `Meteor.call`, and you can also use the `Meteor.apply`
+method too. Meteor Cucumber uses a forked version of the 
+[oortcloud node-ddp-client](https://github.com/oortcloud/node-ddp-client). The 
+[Xolv.io fork](https://github.com/xolvio/node-ddp-client) matches the method signatures of call and 
+apply of the Meteor API, and also promisifies them using 
+[Bluebird](https://github.com/petkaantonov/bluebird). This means you can't use the usual 
+asynchronous method callbacks, but you can achieve the same thing by calling 
+`this.server.call('myMethod').then(callback)`. 
 
 You can use this connection to either perform API-level end-to-end testing, or to use in conjunction
-with fixtures to clear the mirror database or to setup test-data (see [Fixtures](fixtures) below)
-
-The DDP object is an instance of the [node DDP client from oortcloud](https://github.com/oortcloud/node-ddp-client).
+with fixtures to clear the mirror database or to setup test-data (see [Fixtures](fixtures)).
 
 Note you can also access the DDP client on the global object like this: `global.ddp`. This is useful
 if you are trying to connect from a context where the world object may have been destroyed, like a
 hook.
+
+Be mindful that the DDP connection to the server. If you want to call a Meteor method from the
+client, you should do so using the `this.client`. See [WebdriverIO](WebdriverIO) for more details.
 
 ### Fixtures
 If you include any source files under the `/tests/cucumber/fixtures` directory, these will be
@@ -125,7 +153,7 @@ Meteor.methods({
 ```javascript
 // /tests/cucumber/features/step_definitions/hooks.js
 this.Before(function (event, callback) {
-  this.mirror.call('reset', [], callback);
+  global.server.call('reset', callback);
 }
 ```
 
@@ -206,15 +234,15 @@ meteor --test
 ## Configuration
 You can configure settings using environment variables. These are available:
 
-### Cuke Monkey Options
+### Chimp Options
 This package is somewhat opinionated in its outputs and options, however you have complete control
 over how you want the underlying tools to behave. The tool that is doing all the work is
-[cuke-monkey](https://github.com/xolvio/cuke-monkey). You can directly pass command line switches to
-cuke-monkey as follows:
+[Chimp](https://github.com/xolvio/chimp). You can directly pass command line switches to
+Chimp as follows:
 
-`MONKEY_OPTIONS='--format=progress --browser=chrome ...'`
+`CHIMP_OPTIONS='--format=progress --browser=chrome ...'`
 
-See the [cuke-monkey](https://github.com/xolvio/cuke-monkey) docs for details.
+See the [Chimp](https://github.com/xolvio/chimp) docs for details.
 
 Be mindful that using this is an advanced option that bypasses the defaults in xolvio:cucumber.
 
@@ -228,7 +256,7 @@ Be mindful that using this is an advanced option that bypasses the defaults in x
 `CUCUMBER_SCREENSHOTS_DIR=./tests/cucumber/.screenshots (default)`
 
 #### Experimental: Parallel testing
-To enable this mode, you need to set this environment variable:
+To enable this mode, you need to checkout the `parallel` branch and set this environment variable:
 `CUCUMBER_NODES=4`
 
 This will run 4 separate nodes, each with their own mirror, Cucumber, WebDriverIO and PhantomJS
@@ -296,20 +324,20 @@ automate the scenario as concrete actions:
 
 ```javascript
 this.Given(/^I have authored the site title as "([^"]*)"$/, function (title, callback) {
-  // this.ddp is a connection to the mirror available to you in all steps
-  this.mirror.call('updateTitle', [title], callback);
+  // this.server is a connection to the mirror available to you in all steps
+  this.server.call('updateTitle', [title], callback);
 });
 
 this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
-  // this.browser is a pre-configured WebdriverIO + PhantomJS instance
-  this.browser.
-    url(url.resolve(process.env.ROOT_URL, relativePath)). // process.env.HOST points to the app
+  // this.client is a pre-configured WebdriverIO + PhantomJS instance
+  this.client.
+    url(url.resolve(process.env.ROOT_URL, relativePath)). // process.env.ROOT_URL points to the app
     call(callback);
 });
 
 this.Then(/^I should see the heading "([^"]*)"$/, function (expectedTitle, callback) {
   // you can use chai-as-promised in step definitions also
-  this.browser.
+  this.client.
     waitForVisible('h1'). // WebdriverIO chain-able promise magic
     getText('h1').should.become(expectedTitle).and.notify(callback);
 });
@@ -376,7 +404,7 @@ The latest Velocity 0.6.0 release removed the `test-proxy` package. After you up
 to remove this package from your `/packages` folder.
 
 ### No more xolvio:webdriver
-You need to delete the xolvio:webdriver package as this is now built-in using cuke-monkey
+You need to delete the xolvio:webdriver package as this is now built-in using Chimp
 
 ### Cukes now runs outside the Meteor context
 You no longer have access to the main Meteor app from within your step definitions. You should never
@@ -384,14 +412,11 @@ need the main app anyway. Typically users were using Meteor.DDP, but you can now
 instead which is pre-connected to the mirror. [See the DDP section above](https://github.com/xolvio/meteor-cucumber#ddp) for details.
 
 ### No World object / world.browser / world.ddp
-Cuke-monkey already creates and initializes a [simple world object](https://github.com/xolvio/cuke-monkey/blob/develop/lib/cucumberjs/world.js#L47).
+Chimp already creates and initializes a [simple world object](https://github.com/xolvio/Chimp/blob/develop/lib/cucumberjs/world.js#L47).
 This means no more `helper.world.browser`, instead you can just replace all those calls with
-`this.browser`.
+`this.client`.
 
-Same goes for DDP, you now use `this.ddp` and be sure to put all params in an array,
-so instead of `this.mirror.call('myMethod', param1, param2, callback)` you need to use
-`this.mirror.call('myMethod', [param1, param2], callback)`. If your method doesn't take params, you
-must still pass an empty array.
+Same goes for DDP, you now use `this.server` and be sure read the notes above about [DDP](#DDP)
 
 If you need a World object, please get in touch by reporting an issue and letting us know what
 you're trying to do.
