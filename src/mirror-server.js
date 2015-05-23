@@ -108,7 +108,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         }
         _processFeatures(results);
       } catch (e) {
-        console.error('[xolvio:cucumber] Bad response from chimp server. Try rerunning'.red);
+        console.error('[xolvio:cucumber] Bad response from Chimp server. Try rerunning'.red);
         return;
       }
 
@@ -132,9 +132,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return;
     }
 
-    DEBUG && console.log('[xolvio:cucumber] Starting chimp');
+    DEBUG && console.log('[xolvio:cucumber] Starting Chimp');
     // TODO add node ID to chimp instance
-    _chimpProc = new sanjo.LongRunningChildProcess('chimp');
+    _chimpProc = new sanjo.LongRunningChildProcess('Chimp');
     if (_chimpProc.isRunning()) {
       DEBUG && console.log('[xolvio:cucumber] Chimp is already running');
       return;
@@ -165,7 +165,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       options: spawnOptions
     });
 
-    DEBUG && console.log('[xolvio:cucumber] chimp process forked with pid', _chimpProc.getPid());
+    DEBUG && console.log('[xolvio:cucumber] Chimp process forked with pid', _chimpProc.getPid());
 
   }
 
