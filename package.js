@@ -11,7 +11,7 @@
   });
 
   Npm.depends({
-    'chimp': '0.7.8',
+    'chimp': '0.7.9',
     'colors': '1.0.3',
     'fs-extra': '0.18.0'
   });
