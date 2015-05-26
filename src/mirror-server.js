@@ -7,7 +7,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   'use strict';
 
   var path = Npm.require('path'),
-      fs = Npm.require('fs-extra');
+      fs   = Npm.require('fs-extra');
 
   // this library extends the string prototype
   Npm.require('colors');
@@ -110,7 +110,19 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         }
         _processFeatures(results);
       } catch (e) {
-        console.error('[xolvio:cucumber] Bad response from Chimp server. Try rerunning'.red);
+        console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
+
+        // attempt to kill any current runs and tell velocity we failed
+        try {
+          HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
+        } catch (e) {
+        }
+        _velocityConnection.call('velocity/reports/submit', {
+          name: 'Chimp Server Error',
+          framework: FRAMEWORK_NAME,
+          result: 'failed'
+        });
+        _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
         return;
       }
 
