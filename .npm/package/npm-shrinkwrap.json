@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "chimp": {
-      "version": "0.7.9",
+      "version": "0.7.10",
       "dependencies": {
         "async": {
           "version": "0.9.2"
@@ -819,8 +819,11 @@
           "version": "0.1.1"
         },
         "selenium-standalone": {
-          "version": "4.4.0",
+          "version": "4.4.2",
           "dependencies": {
+            "URIjs": {
+              "version": "1.15.1"
+            },
             "commander": {
               "version": "2.8.1",
               "dependencies": {
@@ -953,11 +956,18 @@
                 }
               }
             },
-            "URIjs": {
-              "version": "1.15.1"
-            },
-            "whereis": {
-              "version": "0.4.0"
+            "which": {
+              "version": "1.1.1",
+              "dependencies": {
+                "is-absolute": {
+                  "version": "0.1.7",
+                  "dependencies": {
+                    "is-relative": {
+                      "version": "0.1.3"
+                    }
+                  }
+                }
+              }
             }
           }
         },
