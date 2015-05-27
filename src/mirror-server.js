@@ -98,10 +98,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       try {
         var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
         console.log("results in multi ", JSON.stringify(results));
-        if (results) {
-          var results = JSON.parse(response.content);
-          _processFeatures(results);
-        }
+        var results = JSON.parse(response.content);
+        _processFeatures(results);
       }
       catch (e) {
         console.log("error in multi", e);
@@ -138,7 +136,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         console.log("results in single ", JSON.stringify(results));
         _processFeatures(results);
       } catch (e) {
-        console.log("error in single ", e);
         console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
 
         finishWithError();
