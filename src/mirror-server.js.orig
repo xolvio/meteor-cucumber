@@ -6,9 +6,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
+<<<<<<< HEAD
+  var path = Npm.require('path');
+  var fs = Npm.require('fs-extra');
+  var freeport = Npm.require('freeport');
+=======
   var path = Npm.require('path'),
-      fs = Npm.require('fs-extra'),
-      freeport = Npm.require('freeport');
+      fs   = Npm.require('fs-extra');
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
 
   // this library extends the string prototype
   Npm.require('colors');
@@ -28,9 +33,13 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   var _velocityConnection,
       _velocityTestFiles,
-      _chimpProc,
+<<<<<<< HEAD
+      _cukeMonkeyProc,
       _serverPort,
       _runningParallelTest;
+=======
+      _chimpProc;
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
 
   Meteor.startup(_startChimp);
 
@@ -71,6 +80,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
     var findAndRun = function () {
       var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
+      console.log("in find and run", feature);
       if (feature) {
         _runningParallelTest = true;
         _run(feature, findAndRun);
@@ -89,32 +99,24 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   }
 
   function _run (feature, cb) {
-
     if (feature) {
+<<<<<<< HEAD
       var _error = false;
 
       console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath, " port ", _getServerPort());
 
       try {
         var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
-        console.log("results in multi ", JSON.stringify(results));
-        if (results) {
-          var results = JSON.parse(response.content);
-          _processFeatures(results);
-        }
+        var results = JSON.parse(response.content);
+        _processFeatures(results);
       }
-      catch (e) {
-        console.log("error in multi", e);
-        console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
+      catch (error) {
+        console.error('[xolvio:cucumber] Bad response from cuke-monkey server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
         _error = true;
       }
 
       if (_error) {
-        if (feature.brokenPreviously) {
-          finishWithError();
-        } else {
-          _velocityConnection.call('velocity/featureTestFailed', {featureId: feature._id});
-        }
+        _velocityConnection.call('velocity/featureTestFailed', {featureId: feature._id});
       }
       else {
         _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
@@ -122,6 +124,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       _runningParallelTest = false;
       cb && cb();
+=======
+      console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath);
+      // TODO call chimp with a single file to run
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
     } else {
       console.log('[xolvio:cucumber] Cucumber is running'.yellow);
       _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
@@ -129,40 +135,36 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       try {
         HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
+<<<<<<< HEAD
+=======
+        // TODO modify chimp server to take a param to run one feature only
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
         var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
         var results = JSON.parse(response.content);
         if (results.length === 0) {
           console.log('[xolvio:cucumber] No features found. Be sure to annotate scenarios'.yellow,
             'you want to run in watch mode with the'.yellow, '@dev'.cyan, 'tag'.yellow);
         }
-        console.log("results in single ", JSON.stringify(results));
         _processFeatures(results);
       } catch (e) {
-        console.log("error in single ", e);
         console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
 
-        finishWithError();
-
+        // attempt to kill any current runs and tell velocity we failed
+        try {
+          HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
+        } catch (e) {
+        }
+        _velocityConnection.call('velocity/reports/submit', {
+          name: 'Chimp Server Error',
+          framework: FRAMEWORK_NAME,
+          result: 'failed'
+        });
+        _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
         return;
       }
 
       _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
 
-    }
-
-    function finishWithError() {
-      // attempt to kill any current runs and tell velocity we failed
-
-      try {
-        HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
-      } catch (e) {
-      }
-      _velocityConnection.call('velocity/reports/submit', {
-        name: 'Chimp Server Error',
-        framework: FRAMEWORK_NAME,
-        result: 'failed'
-      });
-      _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
     }
 
   }
@@ -177,14 +179,40 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return;
     }
 
+<<<<<<< HEAD
+
+=======
+    DEBUG && console.log('[xolvio:cucumber] Starting Chimp');
+    // TODO add node ID to chimp instance
+    _chimpProc = new sanjo.LongRunningChildProcess('Chimp');
+    if (_chimpProc.isRunning()) {
+      DEBUG && console.log('[xolvio:cucumber] Chimp is already running in server mode');
+      return;
+    }
+
+    var args = _getArgs();
+
+    fs.chmodSync(BINARY, parseInt('555', 8));
+    var nodePath = process.execPath;
+    var nodeDir = path.dirname(nodePath);
+    var env = _.clone(process.env);
+    // Expose the Meteor node binary path for the script that is run
+    env.PATH = nodeDir + ':' + env.PATH;
+    var spawnOptions = {
+      cwd: cwd,
+      stdio: 'inherit',
+      env: env
+    };
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
 
     freeport(Meteor.bindEnvironment(function(err, port) {
       _serverPort = port;
 
-      DEBUG && console.log('[xolvio:cucumber] Starting Chimp');
-      _chimpProc = new sanjo.LongRunningChildProcess('Chimp_' + _getServerPort());
-      if (_chimpProc.isRunning()) {
-        DEBUG && console.log('[xolvio:cucumber] Chimp is already running in server mode');
+<<<<<<< HEAD
+      DEBUG && console.log('[xolvio:cucumber] Starting the monkey');
+      _cukeMonkeyProc = new sanjo.LongRunningChildProcess('cukeMonkey_' + _getServerPort());
+      if (_cukeMonkeyProc.isRunning()) {
+        DEBUG && console.log('[xolvio:cucumber] The monkey is already running');
         return;
       }
 
@@ -197,7 +225,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       // Expose the Meteor node binary path for the script that is run
       env.PATH = nodeDir + ':' + env.PATH;
       var spawnOptions = {
-        cwd: cwd,
+        cwd: path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME),
         stdio: 'inherit',
         env: env
       };
@@ -206,17 +234,30 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       args.push('--serverPort=' + _getServerPort());
 
-      DEBUG && console.log('[xolvio:cucumber] Starting Chimp with', BINARY, args, spawnOptions);
+      console.log("[xolvio:cucumber] args for the monkey", args);
 
-      _chimpProc.spawn({
+      DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
+
+      _cukeMonkeyProc.spawn({
         command: nodePath,
         args: args,
         options: spawnOptions
       });
 
-      DEBUG && console.log('[xolvio:cucumber] Chimp process forked with pid', _chimpProc.getPid());
+      DEBUG && console.log('[xolvio:cucumber] Cuke-Monkey process forked with pid', _cukeMonkeyProc.getPid());
 
     }))
+=======
+    DEBUG && console.log('[xolvio:cucumber] Starting Chimp with', BINARY, args, spawnOptions);
+
+    _chimpProc.spawn({
+      command: nodePath,
+      args: args,
+      options: spawnOptions
+    });
+
+    DEBUG && console.log('[xolvio:cucumber] Chimp process forked with pid', _chimpProc.getPid());
+>>>>>>> e5a45b15bde213ea880da709bcaa39dfa0ae9f6c
 
   }
 
