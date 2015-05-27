@@ -53,9 +53,9 @@ underscore@1.0.3
 url@1.0.4
 velocity:chokidar@1.0.1_1
 velocity:core@0.6.5
-velocity:html-reporter@0.5.3
+velocity:html-reporter@0.6.2
 velocity:meteor-internals@1.1.0_7
 velocity:shim@0.1.0
 webapp@1.2.0
 webapp-hashing@1.0.3
-xolvio:cucumber@0.8.0
+xolvio:cucumber@0.8.6

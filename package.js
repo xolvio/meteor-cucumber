@@ -11,7 +11,7 @@
   });
 
   Npm.depends({
-    'cuke-monkey': '0.6.1',
+    'chimp': '0.7.11',
     'colors': '1.0.3',
     'fs-extra': '0.18.0',
     'freeport': '1.0.4'
@@ -29,7 +29,7 @@
       'sanjo:long-running-child-process@1.1.1'
     ], ['server', 'client']);
     api.use([
-      'velocity:html-reporter@0.5.3'
+      'velocity:html-reporter@0.6.2'
     ], 'client');
 
     api.add_files([
