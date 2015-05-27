@@ -1,3 +1,9 @@
+#0.8.0
+
+* Uses latest cuke-monkey
+* Works on Windows
+* Updated examples to use new syntax
+
 #0.7.0
 
 * Now using a long-running child process for cuke-monkey

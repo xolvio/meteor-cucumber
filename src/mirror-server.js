@@ -55,6 +55,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
       process.on('message', Meteor.bindEnvironment(function (message) {
+        DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
         if (message.refresh && message.refresh === 'client') {
           debouncedRun();
         }
@@ -65,6 +66,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   });
 
   function _findAndRun () {
+    DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
     var findAndRun = function () {
       var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       console.log("in find and run", feature);
@@ -143,7 +145,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       _serverPort = port;
 
       DEBUG && console.log('[xolvio:cucumber] Starting the monkey');
-      // TODO add node ID to cuke monkey instance
       _cukeMonkeyProc = new sanjo.LongRunningChildProcess('cukeMonkey_' + _getServerPort());
       if (_cukeMonkeyProc.isRunning()) {
         DEBUG && console.log('[xolvio:cucumber] The monkey is already running');
@@ -168,10 +169,12 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       args.push('--serverPort=' + _getServerPort());
 
+      console.log("[xolvio:cucumber] args for the monkey", args);
+
       DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
 
       _cukeMonkeyProc.spawn({
-        command: BINARY,
+        command: nodePath,
         args: args,
         options: spawnOptions
       });
@@ -197,6 +200,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   function _getArgs () {
 
     var args = [];
+
+    args.push(BINARY);
 
     args.push('-r');
     args.push(path.join(process.env.VELOCITY_MAIN_APP_PATH, 'tests', 'cucumber', 'features'));
@@ -224,7 +229,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (process.env.CUCUMBER_TAGS) {
       args.push('--tags=' + process.env.CUCUMBER_TAGS);
-    } else if (!process.env.CI) {
+    } else if (!process.env.VELOCITY_CI) {
       args.push('--tags=@dev');
     } else {
       args.push('--tags=~@ignore');
@@ -344,7 +349,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         insertDots = false,
         DOTS = '  ...\n';
 
-    if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
+    if (errorMessage.indexOf('[xolvio:cucumber] Timed out waiting for asynchronous') !== -1) {
       return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
         + ' timed out';
     }

@@ -9,13 +9,13 @@
 
     this.Given(/^I am a new user$/, function () {
       // no callbacks! DDP has been promisified so you can just return it
-      return this.ddp.callAsync('reset', []); // this.ddp is a connection to the mirror
+      return this.mirror.call('reset'); // this.ddp is a connection to the mirror
     });
 
     this.When(/^I navigate to "([^"]*)"$/, function (relativePath, callback) {
       // WebdriverIO supports Promises/A+ out the box, so you can return that too
       this.browser. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
-        url(url.resolve(process.env.HOST, relativePath)). // process.env.HOST always points to the mirror
+        url(url.resolve(process.env.ROOT_URL, relativePath)). // process.env.ROOT_URL always points to the mirror
         call(callback);
     });
 
@@ -28,4 +28,4 @@
 
   };
 
-})();
+})(); 
