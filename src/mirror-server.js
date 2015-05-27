@@ -67,6 +67,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   function _findAndRun () {
     var findAndRun = function () {
       var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
+      console.log("in find and run", feature);
       if (feature) {
         _runningParallelTest = true;
         _run(feature, findAndRun);
@@ -136,37 +137,36 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _startTheMonkey () {
 
-    DEBUG && console.log('[xolvio:cucumber] Starting the monkey');
-    // TODO add node ID to cuke monkey instance
-    _cukeMonkeyProc = new sanjo.LongRunningChildProcess('cukeMonkey');
-    if (_cukeMonkeyProc.isRunning()) {
-      DEBUG && console.log('[xolvio:cucumber] The monkey is already running');
-      return;
-    }
-
-    var args = _getArgs();
-
-    fs.chmodSync(BINARY, parseInt('555', 8));
-    var nodePath = process.execPath;
-    var nodeDir = path.dirname(nodePath);
-    var env = _.clone(process.env);
-    // Expose the Meteor node binary path for the script that is run
-    env.PATH = nodeDir + ':' + env.PATH;
-    var spawnOptions = {
-      cwd: path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME),
-      stdio: 'inherit',
-      env: env
-    };
-
-    args.push('--server');
 
 
     freeport(Meteor.bindEnvironment(function(err, port) {
       _serverPort = port;
-      console.log("returnedport ", port);
-      args.push('--serverPort=' + _getServerPort());
 
-      console.log("args for the monkey", args);
+      DEBUG && console.log('[xolvio:cucumber] Starting the monkey');
+      // TODO add node ID to cuke monkey instance
+      _cukeMonkeyProc = new sanjo.LongRunningChildProcess('cukeMonkey_' + _getServerPort());
+      if (_cukeMonkeyProc.isRunning()) {
+        DEBUG && console.log('[xolvio:cucumber] The monkey is already running');
+        return;
+      }
+
+      var args = _getArgs();
+
+      fs.chmodSync(BINARY, parseInt('555', 8));
+      var nodePath = process.execPath;
+      var nodeDir = path.dirname(nodePath);
+      var env = _.clone(process.env);
+      // Expose the Meteor node binary path for the script that is run
+      env.PATH = nodeDir + ':' + env.PATH;
+      var spawnOptions = {
+        cwd: path.resolve(process.env.VELOCITY_MAIN_APP_PATH, 'tests', FRAMEWORK_NAME),
+        stdio: 'inherit',
+        env: env
+      };
+
+      args.push('--server');
+
+      args.push('--serverPort=' + _getServerPort());
 
       DEBUG && console.log('[xolvio:cucumber] Starting the monkey with', BINARY, args, spawnOptions);
 
