@@ -33,34 +33,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   Meteor.methods({
     handshake: function () {
-
-      DEBUG && console.log('[xolvio:cucumber] Received handshake from Chimp. Connecting to hub');
-
-      _velocityConnection = DDP.connect(process.env.PARENT_URL);
-      _velocityConnection.subscribe('VelocityTestFiles');
-
-      _velocityTestFiles = new Mongo.Collection('velocityTestFiles', {
-        connection: _velocityConnection
-      });
-
-      _velocityConnection.onReconnect = function () {
-        DEBUG && console.log('[xolvio:cucumber] Connected to hub.');
-        var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 1000);
-        _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
-          added: debouncedRun,
-          removed: debouncedRun,
-          changed: debouncedRun
-        });
-
-        process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
-        process.on('message', Meteor.bindEnvironment(function (message) {
-          DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
-          if (message.refresh && message.refresh === 'client') {
-            debouncedRun();
-          }
-        }));
-
-      };
+      DEBUG && console.log('[xolvio:cucumber] Received handshake from Chimp.');
+      _init();
     }
   });
 
@@ -87,6 +61,37 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       _run();
     }
 
+  }
+
+  function _init() {
+
+    DEBUG && console.log('[xolvio:cucumber] Connecting to hub');
+
+    _velocityConnection = DDP.connect(process.env.PARENT_URL);
+    _velocityConnection.subscribe('VelocityTestFiles');
+
+    _velocityTestFiles = new Mongo.Collection('velocityTestFiles', {
+      connection: _velocityConnection
+    });
+
+    _velocityConnection.onReconnect = function () {
+      DEBUG && console.log('[xolvio:cucumber] Connected to hub.');
+      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 1000);
+      _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
+        added: debouncedRun,
+        removed: debouncedRun,
+        changed: debouncedRun
+      });
+
+      process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
+      process.on('message', Meteor.bindEnvironment(function (message) {
+        DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
+        if (message.refresh && message.refresh === 'client') {
+          debouncedRun();
+        }
+      }));
+
+    };
   }
 
   // TODO add callback here so findAndRun can be run again after a worker has finished running
@@ -151,6 +156,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     _chimpProc = new sanjo.LongRunningChildProcess('Chimp');
     if (_chimpProc.isRunning()) {
       DEBUG && console.log('[xolvio:cucumber] Chimp is already running in server mode');
+      _init();
       return;
     }
 

@@ -1,3 +1,8 @@
+#0.8.1 - 0.8.7
+
+* Ton of bug fixes
+* Sorry for sloppy release note :)
+
 #0.8.0
 
 * Uses latest cuke-monkey
