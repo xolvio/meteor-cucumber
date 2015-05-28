@@ -93,8 +93,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     };
   }
 
-  // TODO add callback here so findAndRun can be run again after a worker has finished running
-  function _run (feature) {
+  function _run (feature, cb) {
     if (feature) {
       var _error = false;
 
@@ -107,7 +106,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         _processFeatures(results);
       }
       catch (e) {
-        console.log("error in multi", e);
         console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
         _error = true;
       }
