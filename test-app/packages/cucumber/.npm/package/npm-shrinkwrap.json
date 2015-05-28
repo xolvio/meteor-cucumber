@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "chimp": {
-      "version": "0.7.11",
+      "version": "0.7.12",
       "dependencies": {
         "async": {
           "version": "0.9.2"
@@ -1559,7 +1559,7 @@
               "version": "0.1.2"
             },
             "har-validator": {
-              "version": "1.7.0",
+              "version": "1.7.1",
               "dependencies": {
                 "chalk": {
                   "version": "1.0.0",
