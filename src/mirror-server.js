@@ -242,6 +242,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--format=' + process.env.CUCUMBER_FORMAT);
     }
 
+    if (process.env.CUCUMBER_JSON_OUTPUT) {
+      args.push('--jsonOutput=' + process.env.CUCUMBER_JSON_OUTPUT);
+    }
+
     if (process.env.WD_TIMEOUT_ASYNC_SCRIPT) {
       args.push('--timeoutsAsyncScript=' + process.env.WD_TIMEOUT_ASYNC_SCRIPT);
     }
