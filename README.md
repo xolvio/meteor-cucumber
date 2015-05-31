@@ -216,12 +216,10 @@ versions of this package.
 ### Continuous Integration
 
 On the CI server, just run:
-`meteor --test`
+`VELOCITY_CI=1 meteor --test`
 
-Velocity takes care of CI for us by extending the `meteor` command with `meteor --test`. Xolv.io
-Cucumber knows that you are running in CI mode through a `VELOCITY_CI` environmenrt variable that
-Velocity sets in `--test` mode so it can run all tags and not just `@dev` tags.See the
-[cucumber options below](#cucumber-options) for custom tags.
+When VELOCITY_CI is set `xolvio:cucumber` runs all tags and not just the `@dev` tags like in dev 
+mode. See the [cucumber options below](#cucumber-options) if you'd like to use custom tags.
 
 To run your tests for Cucumber you just need to be sure any npm dependencies are installed on the CI
 server. So if you have created an npm package file under `tests/cucumber/package.json`, then you
@@ -234,6 +232,12 @@ npm install
 cd ../..
 meteor --test
 ```
+
+You may want to collect the raw json report from Cucumber. This can be done by setting the 
+`CUCUMBER_JSON_OUTPUT` variable to the path you'd like the json report to be written to.
+
+See the [Letterpress `circle.yml` file](https://github.com/xolvio/Letterpress/blob/master/circle.yml)
+for an example of using meteor-cucumber on CircleCI.
 
 ## Configuration
 You can configure settings using environment variables. These are available:
