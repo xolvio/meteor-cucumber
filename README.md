@@ -49,13 +49,13 @@ tests
 
 And you should also see this in the reporter:
 
-![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
+![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
 
 Don't worry, the failure is by design to encourage you to always start with a failing specification.
 If you go ahead and change the file `/tests/cucumber/features/sample.feature` and replace
 "intentional failure" with the actual title of your site, you should see this:
 
-![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
+![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
 
 See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) below.
 
