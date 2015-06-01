@@ -236,7 +236,7 @@ meteor --test
 You may want to collect the raw json report from Cucumber. This can be done by setting the 
 `CUCUMBER_JSON_OUTPUT` variable to the path you'd like the json report to be written to.
 
-See the [Letterpress `circle.yml` file](https://github.com/xolvio/Letterpress/blob/master/circle.yml)
+See the [Letterpress `circle.yml` file](https://github.com/xolvio/Letterpress/blob/develop/circle.yml)
 for an example of using meteor-cucumber on CircleCI.
 
 ## Configuration
@@ -324,7 +324,7 @@ Feature: Author a Website
 
 2) Upon saving the file you will see this in the log:
 
-![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/not_implemented.png "Not Implemented")
+![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/not_implemented.png "Not Implemented")
 
 
 3) You then take these conveniently generated step definition snippets write the the code to
@@ -354,7 +354,7 @@ this.Then(/^I should see the heading "([^"]*)"$/, function (expectedTitle, callb
 4) Upon saving you should see a failing test indicator either in the Velocity HTML reporter or the
 console:
 
-![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/failed_step.png "Failed Specs")
+![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/failed_step.png "Failed Specs")
 
 5) You then write the actualizing code to make the above steps work:
 ```handlebars
@@ -382,7 +382,7 @@ if (Meteor.isClient) {
 
 6) Now you'll see a passing test indicator:
 
-![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/passing_specs.png "Passing Specs")
+![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/passing_specs.png "Passing Specs")
 
 7. You now write another scenario or feature by going back to step 1.
 
@@ -403,7 +403,7 @@ Books:
 ## Example Meteor Projects
 
 * [Letterpress](https://github.com/xolvio/Letterpress)
-* [Leaderboard Cucumber](https://github.com/meteor-velocity/velocity-examples/tree/master/leaderboard-cucumber)
+* [Leaderboard Cucumber](https://github.com/meteor-velocity/velocity-examples/tree/develop/leaderboard-cucumber)
 
 ## Breaking Changes
 
