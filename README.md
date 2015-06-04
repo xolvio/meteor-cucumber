@@ -8,6 +8,7 @@ Cucumber is an open-source Behaviour-Driven Development (BDD) tool popular in Ag
 allows you to define the behaviour of your app using plain text. See below for more details and
 examples.
 
+#Get the Book
 To learn more about testing with Meteor, consider purchasing our book [The Meteor Testing Manual](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber).
 
 [![](http://www.meteortesting.com/img/tmtm.gif)](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber)
