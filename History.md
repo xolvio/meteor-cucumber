@@ -1,3 +1,9 @@
+#0.9.2
+
+* Added a CUCUMBER_TAIL environment variable to tail the cucumber.log in the main console
+* Added a INSTALL_DEPENDENCIES environment variable for CI build caching purposes
+* Updated to latest chimp which uses updated Chai, Chai-as-promised, selenium, chrome/ie drivers
+
 #0.9.1
 
 * Installs chimp dependencies on main process startup to support build caching on CI servers

@@ -192,6 +192,10 @@ It's advised that you monitor this log file with a command like
 
 `tail -f .meteor/local/log/cucumber.log`
 
+You can also set the `CUCUMBER_TAIL` environment variable and the `cucumber.log` output will be 
+tailed on the main console. Be warned that this mode makes it mode difficult to copy/paste code
+snips.
+
 ### Adding NPM Modules
 You might want to use npm packages inside your steps, like underscore for instance. To do this, you
 can add a `package.json` file inside your `/tests/cucumber` directory and include npm modules like
@@ -235,6 +239,10 @@ meteor --test
 
 You may want to collect the raw json report from Cucumber. This can be done by setting the 
 `CUCUMBER_JSON_OUTPUT` variable to the path you'd like the json report to be written to.
+
+If you want this package to download dependencies like selenium server even with Velocity disabled, 
+you can do so by setting `INSTALL_DEPENDENCIES`. This is useful to do build caching on CI servers 
+that support it like CircleCI. 
 
 See the [Letterpress `circle.yml` file](https://github.com/xolvio/Letterpress/blob/develop/circle.yml)
 for an example of using meteor-cucumber on CircleCI.
