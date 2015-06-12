@@ -211,8 +211,7 @@ you would in any normal node app. Here's an example:
 
 ```
 
-Note you still need to manually run `npm install` yourself currently. This may change in future
-versions of this package.
+This package will automatically install any dependencies you place in this file for you.  
 
 ### Continuous Integration
 

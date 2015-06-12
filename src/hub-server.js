@@ -19,12 +19,21 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }, {
         contents: Assets.getText(path.join('src', 'sample-tests', 'fixture.js')),
         path: path.join(FRAMEWORK_NAME, 'fixtures', 'my_fixture.js')
+      }, {
+        contents: Assets.getText(path.join('src', 'sample-tests', 'package.json')),
+        path: path.join(FRAMEWORK_NAME, 'package.json')
       }];
 
   if (process.env.NODE_ENV !== 'development' || process.env.IS_MIRROR ||
     process.env[FRAMEWORK_NAME.toUpperCase()] === '0' || process.env.VELOCITY === '0') {
     return;
   }
+
+  DEBUG && console.log('[xolvio:cucumber] Attempting to install chimp dependencies');
+  if (DEBUG) {
+    process.env['chimp.debug'] = true;
+  }
+  Meteor.wrapAsync(Npm.require('chimp').install)();
 
   DEBUG && console.log('[xolvio:cucumber] Cucumber hub is loading');
 

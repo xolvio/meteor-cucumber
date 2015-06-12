@@ -1,4 +1,12 @@
-#0.8.1 - 0.8.7
+#0.9.1
+
+* Installs chimp dependencies on main process startup to support build caching on CI servers
+
+#0.9.0
+
+* Automatically downloads npm dependencies when a package.json file is found in /tests/cucumber
+
+#0.8.1 - 0.8.9
 
 * Ton of bug fixes
 * Sorry for sloppy release note :)
