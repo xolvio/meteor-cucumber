@@ -6,7 +6,7 @@
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
     version: '0.9.2',
-    git: 'https://github.com:xolvio/meteor-cucumber.git',
+    git: 'https://github.com/xolvio/meteor-cucumber.git',
     debugOnly: true
   });
 
