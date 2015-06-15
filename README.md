@@ -8,7 +8,12 @@ Cucumber is an open-source Behaviour-Driven Development (BDD) tool popular in Ag
 allows you to define the behaviour of your app using plain text. See below for more details and
 examples.
 
-## [>> BREAKING CHANGES in v0.6.0 - See Below <<](#breaking-changes)
+#Get the Book
+To learn more about testing with Meteor, consider purchasing our book [The Meteor Testing Manual](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber).
+
+[![](http://www.meteortesting.com/img/tmtm.gif)](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber)
+
+Your support helps us continue our work on Velocity and related frameworks.
 
 ## Features
 * CucumberJS with Promise support (mostly ready)
@@ -45,13 +50,13 @@ tests
 
 And you should also see this in the reporter:
 
-![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
+![Velocity Failing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/velocity_failing_tests.png "Velocity Failing Test")
 
 Don't worry, the failure is by design to encourage you to always start with a failing specification.
 If you go ahead and change the file `/tests/cucumber/features/sample.feature` and replace
 "intentional failure" with the actual title of your site, you should see this:
 
-![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
+![Velocity Passing Test](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/velocity_passing_tests.png "Velocity Passing Test")
 
 See a more detailed [Example of BDD with Meteor](#example-of-bdd-with-meteor) below.
 
@@ -187,6 +192,10 @@ It's advised that you monitor this log file with a command like
 
 `tail -f .meteor/local/log/cucumber.log`
 
+You can also set the `CUCUMBER_TAIL` environment variable and the `cucumber.log` output will be 
+tailed on the main console. Be warned that this mode makes it mode difficult to copy/paste code
+snips.
+
 ### Adding NPM Modules
 You might want to use npm packages inside your steps, like underscore for instance. To do this, you
 can add a `package.json` file inside your `/tests/cucumber` directory and include npm modules like
@@ -206,18 +215,15 @@ you would in any normal node app. Here's an example:
 
 ```
 
-Note you still need to manually run `npm install` yourself currently. This may change in future
-versions of this package.
+This package will automatically install any dependencies you place in this file for you.  
 
 ### Continuous Integration
 
 On the CI server, just run:
-`meteor --test`
+`VELOCITY_CI=1 meteor --test`
 
-Velocity takes care of CI for us by extending the `meteor` command with `meteor --test`. Xolv.io
-Cucumber knows that you are running in CI mode through a `VELOCITY_CI` environmenrt variable that
-Velocity sets in `--test` mode so it can run all tags and not just `@dev` tags.See the
-[cucumber options below](#cucumber-options) for custom tags.
+When VELOCITY_CI is set `xolvio:cucumber` runs all tags and not just the `@dev` tags like in dev 
+mode. See the [cucumber options below](#cucumber-options) if you'd like to use custom tags.
 
 To run your tests for Cucumber you just need to be sure any npm dependencies are installed on the CI
 server. So if you have created an npm package file under `tests/cucumber/package.json`, then you
@@ -230,6 +236,16 @@ npm install
 cd ../..
 meteor --test
 ```
+
+You may want to collect the raw json report from Cucumber. This can be done by setting the 
+`CUCUMBER_JSON_OUTPUT` variable to the path you'd like the json report to be written to.
+
+If you want this package to download dependencies like selenium server even with Velocity disabled, 
+you can do so by setting `INSTALL_DEPENDENCIES`. This is useful to do build caching on CI servers 
+that support it like CircleCI. 
+
+See the [Letterpress `circle.yml` file](https://github.com/xolvio/Letterpress/blob/develop/circle.yml)
+for an example of using meteor-cucumber on CircleCI.
 
 ## Configuration
 You can configure settings using environment variables. These are available:
@@ -316,7 +332,7 @@ Feature: Author a Website
 
 2) Upon saving the file you will see this in the log:
 
-![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/not_implemented.png "Not Implemented")
+![Not Implemented"](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/not_implemented.png "Not Implemented")
 
 
 3) You then take these conveniently generated step definition snippets write the the code to
@@ -346,7 +362,7 @@ this.Then(/^I should see the heading "([^"]*)"$/, function (expectedTitle, callb
 4) Upon saving you should see a failing test indicator either in the Velocity HTML reporter or the
 console:
 
-![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/failed_step.png "Failed Specs")
+![Failed Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/failed_step.png "Failed Specs")
 
 5) You then write the actualizing code to make the above steps work:
 ```handlebars
@@ -374,7 +390,7 @@ if (Meteor.isClient) {
 
 6) Now you'll see a passing test indicator:
 
-![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/master/test-app/public/passing_specs.png "Passing Specs")
+![Passing Specs](https://raw.githubusercontent.com/xolvio/meteor-cucumber/develop/test-app/public/passing_specs.png "Passing Specs")
 
 7. You now write another scenario or feature by going back to step 1.
 
@@ -395,7 +411,7 @@ Books:
 ## Example Meteor Projects
 
 * [Letterpress](https://github.com/xolvio/Letterpress)
-* [Leaderboard Cucumber](https://github.com/meteor-velocity/velocity-examples/tree/master/leaderboard-cucumber)
+* [Leaderboard Cucumber](https://github.com/meteor-velocity/velocity-examples/tree/develop/leaderboard-cucumber)
 
 ## Breaking Changes
 

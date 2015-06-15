@@ -8,9 +8,9 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   var path = Npm.require('path');
 
-  var FRAMEWORK_NAME = 'cucumber',
+  var FRAMEWORK_NAME  = 'cucumber',
       FRAMEWORK_REGEX = '^tests/' + FRAMEWORK_NAME + '/((?!node_modules/).)+\\.(feature|js|coffee|litcoffee|coffee\\.md)$',
-      SAMPLE_TESTS = [{
+      SAMPLE_TESTS    = [{
         contents: Assets.getText(path.join('src', 'sample-tests', 'feature.feature')),
         path: path.join(FRAMEWORK_NAME, 'features', 'sample.feature')
       }, {
@@ -19,7 +19,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       }, {
         contents: Assets.getText(path.join('src', 'sample-tests', 'fixture.js')),
         path: path.join(FRAMEWORK_NAME, 'fixtures', 'my_fixture.js')
+      }, {
+        contents: Assets.getText(path.join('src', 'sample-tests', 'package.json')),
+        path: path.join(FRAMEWORK_NAME, 'package.json')
       }];
+
+  if (!!process.env.INSTALL_DEPENDENCIES) {
+    _installDependencies();
+  }
 
   if (process.env.NODE_ENV !== 'development' || process.env.IS_MIRROR ||
     process.env[FRAMEWORK_NAME.toUpperCase()] === '0' || process.env.VELOCITY === '0') {
@@ -42,6 +49,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       testsPath: path.join(FRAMEWORK_NAME, 'fixtures'),
       nodes: process.env.CUCUMBER_NODES ? parseInt(process.env.CUCUMBER_NODES) : 1
     });
+
+    if (process.env.CUCUMBER_TAIL) {
+      _tailCucumberLogs();
+    }
+
 
     var initOnce = _.once(Meteor.bindEnvironment(_init));
     VelocityMirrors.find({framework: FRAMEWORK_NAME, state: 'ready'}).observe({
@@ -70,6 +82,25 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
   }
 
+  function _tailCucumberLogs () {
+
+    var cucumberLogFilePath = path.join(process.env.PWD, '.meteor', 'local', 'log', 'cucumber.log')
+    var Tail = Npm.require('tail-forever');
+    var tail = new Tail(cucumberLogFilePath, {});
+
+    tail.on('line', function (data) {
+      console.log('[cucumber.log]', data);
+      if (data.indexOf('Exiting cucumber') !== -1) {
+        tail.unwatch();
+      }
+    });
+
+    tail.on('error', function (error) {
+      console.error('[cucumber.log]', error);
+    });
+
+  }
+
   function _run (id, changes) {
 
     if (changes && changes.status) {
@@ -90,6 +121,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       {multi: true}
     );
 
+  }
+
+  function _installDependencies () {
+    DEBUG && console.log('[xolvio:cucumber] Attempting to install chimp dependencies');
+    if (DEBUG) {
+      process.env['chimp.debug'] = true;
+    }
+    Meteor.wrapAsync(Npm.require('chimp').install)();
   }
 
 

@@ -1,4 +1,18 @@
-#0.8.1 - 0.8.7
+#0.9.2
+
+* Added a CUCUMBER_TAIL environment variable to tail the cucumber.log in the main console
+* Added a INSTALL_DEPENDENCIES environment variable for CI build caching purposes
+* Updated to latest chimp which uses updated Chai, Chai-as-promised, selenium, chrome/ie drivers
+
+#0.9.1
+
+* Installs chimp dependencies on main process startup to support build caching on CI servers
+
+#0.9.0
+
+* Automatically downloads npm dependencies when a package.json file is found in /tests/cucumber
+
+#0.8.1 - 0.8.9
 
 * Ton of bug fixes
 * Sorry for sloppy release note :)

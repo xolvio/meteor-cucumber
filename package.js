@@ -5,15 +5,16 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.9.0',
-    git: 'https://github.com:xolvio/meteor-cucumber.git',
+    version: '0.9.2',
+    git: 'https://github.com/xolvio/meteor-cucumber.git',
     debugOnly: true
   });
 
   Npm.depends({
-    'chimp': '0.7.12',
+    'chimp': '0.8.3',
     'colors': '1.0.3',
     'fs-extra': '0.18.0',
+    "tail-forever": "0.3.11",
     'freeport': '1.0.4'
   });
 
@@ -35,6 +36,7 @@
     api.add_files([
       'src/sample-tests/feature.feature',
       'src/sample-tests/steps.js',
+      'src/sample-tests/package.json',
       'src/sample-tests/fixture.js'
     ], 'server', {isAsset: true});
 

@@ -62,7 +62,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   }
 
-  function _init() {
+  function _init () {
 
     DEBUG && console.log('[xolvio:cucumber] Connecting to hub');
 
@@ -273,6 +273,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--format=' + process.env.CUCUMBER_FORMAT);
     }
 
+    if (process.env.CUCUMBER_JSON_OUTPUT) {
+      args.push('--jsonOutput=' + process.env.CUCUMBER_JSON_OUTPUT);
+    }
+
     if (process.env.WD_TIMEOUT_ASYNC_SCRIPT) {
       args.push('--timeoutsAsyncScript=' + process.env.WD_TIMEOUT_ASYNC_SCRIPT);
     }
@@ -379,16 +383,17 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return errorMessage;
     }
 
-    var msg = '',
+    var msg        = '',
         insertDots = false,
-        DOTS = '  ...\n';
-
-    if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
-      return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
-        + ' timed out';
-    }
+        DOTS       = '  ...\n';
 
     try {
+
+      if (errorMessage.indexOf('Timed out waiting for asyncrhonous') !== -1) {
+        return errorMessage.substring(errorMessage.lastIndexOf('->') + 3, errorMessage.length).trim()
+          + ' timed out';
+      }
+
       _.each(errorMessage.split('\n'), function (line, index) {
         line = line.trim();
         if (index === 0) {
@@ -417,6 +422,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       //console.log(msg.magenta);
     } catch (e) {
       msg = errorMessage;
+      console.error(errorMessage);
     }
 
     return msg;
