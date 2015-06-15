@@ -130,7 +130,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     try {
       var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
-      console.log("results in multi ", JSON.stringify(results));
       var results = JSON.parse(response.content);
       _processFeatures(results);
     }
