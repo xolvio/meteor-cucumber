@@ -1,3 +1,7 @@
+#0.9.3
+
+* Merged the parallel execution branch  
+
 #0.9.2
 
 * Added a CUCUMBER_TAIL environment variable to tail the cucumber.log in the main console
