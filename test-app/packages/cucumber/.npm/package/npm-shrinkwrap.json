@@ -1807,6 +1807,9 @@
     "colors": {
       "version": "1.0.3"
     },
+    "freeport": {
+      "version": "1.0.4"
+    },
     "fs-extra": {
       "version": "0.18.0",
       "dependencies": {

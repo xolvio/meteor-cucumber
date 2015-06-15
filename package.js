@@ -14,7 +14,8 @@
     'chimp': '0.8.3',
     'colors': '1.0.3',
     'fs-extra': '0.18.0',
-    "tail-forever": "0.3.11"
+    "tail-forever": "0.3.11",
+    'freeport': '1.0.4'
   });
 
   Package.onUse(function (api) {
