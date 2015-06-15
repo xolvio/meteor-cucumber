@@ -1,6 +1,6 @@
 #0.9.3
 
-* Merged the parallel execution branch  
+* Merged the parallel execution branch (**** yea!)
 
 #0.9.2
 

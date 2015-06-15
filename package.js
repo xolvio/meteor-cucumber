@@ -25,7 +25,7 @@
     api.use([
       'underscore',
       'http',
-      'velocity:core@0.6.4',
+      'velocity:core@0.7.0',
       'velocity:shim@0.1.0',
       'sanjo:long-running-child-process@1.1.1'
     ], ['server', 'client']);
