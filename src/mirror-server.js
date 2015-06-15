@@ -95,76 +95,78 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   function _run (feature, cb) {
     if (feature) {
-      var _error = false;
-
-      console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath, " port ", _getServerPort());
-
-      try {
-        var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
-        console.log("results in multi ", JSON.stringify(results));
-        var results = JSON.parse(response.content);
-        _processFeatures(results);
-      }
-      catch (e) {
-        console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
-        _error = true;
-      }
-
-      if (_error) {
-        if (feature.brokenPreviously) {
-          finishWithError();
-        } else {
-          _velocityConnection.call('velocity/featureTestFailed', {featureId: feature._id});
-        }
-      }
-      else {
-        _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
-      }
-
-      _runningParallelTest = false;
-      cb && cb();
+      _runParallelExecutionMode(feature, cb);
     } else {
-      console.log('[xolvio:cucumber] Cucumber is running'.yellow);
-      _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
+      _runSingleExecutionMode();
+    }
+  }
 
-      try {
-        HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
+  function _runSingleExecutionMode () {
+    console.log('[xolvio:cucumber] Cucumber is running'.yellow);
+    _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
 
-        var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
-        var results = JSON.parse(response.content);
-        if (results.length === 0) {
-          console.log('[xolvio:cucumber] No features found. Be sure to annotate scenarios'.yellow,
-            'you want to run in watch mode with the'.yellow, '@dev'.cyan, 'tag'.yellow);
-        }
-        console.log("results in single ", JSON.stringify(results));
-        _processFeatures(results);
-      } catch (e) {
-        console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
+    try {
+      HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
-        finishWithError();
-
-        return;
+      var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
+      var results = JSON.parse(response.content);
+      if (results.length === 0) {
+        console.log('[xolvio:cucumber] No features found. Be sure to annotate scenarios'.yellow,
+          'you want to run in watch mode with the'.yellow, '@dev'.cyan, 'tag'.yellow);
       }
+      _processFeatures(results);
+    } catch (e) {
+      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
+      _finishWithError();
+      return;
+    }
+    _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
+  }
 
-      _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
+  function _runParallelExecutionMode (feature, cb) {
+    var _error = false;
 
+    console.log('[xolvio:cucumber] Mirror with pid', process.pid, 'is working on', feature.absolutePath, " port ", _getServerPort());
+
+    try {
+      var response = HTTP.get('http://localhost:' + _getServerPort() + '/run/' + feature.absolutePath);
+      console.log("results in multi ", JSON.stringify(results));
+      var results = JSON.parse(response.content);
+      _processFeatures(results);
+    }
+    catch (e) {
+      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
+      _error = true;
     }
 
-    function finishWithError() {
-      // attempt to kill any current runs and tell velocity we failed
-
-      try {
-        HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
-      } catch (e) {
+    if (_error) {
+      if (feature.brokenPreviously) {
+        _finishWithError();
+      } else {
+        _velocityConnection.call('velocity/featureTestFailed', {featureId: feature._id});
       }
-      _velocityConnection.call('velocity/reports/submit', {
-        name: 'Chimp Server Error',
-        framework: FRAMEWORK_NAME,
-        result: 'failed'
-      });
-      _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
+    }
+    else {
+      _velocityConnection.call('velocity/featureTestDone', {featureId: feature._id});
     }
 
+    _runningParallelTest = false;
+    cb && cb();
+  }
+
+  function _finishWithError() {
+    // attempt to kill any current runs and tell velocity we failed
+
+    try {
+      HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
+    } catch (e) {
+    }
+    _velocityConnection.call('velocity/reports/submit', {
+      name: 'Chimp Server Error',
+      framework: FRAMEWORK_NAME,
+      result: 'failed'
+    });
+    _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
   }
 
   function _startChimp () {
