@@ -1,3 +1,8 @@
+#0.10.0
+
+* Fixes issue where Chrome takes the focus when screenshots for errors are taken (#142)
+* In development mode no screenshots are taken when you use a non-headless browser (Needed to fix #142)
+
 #0.9.3
 
 * Merged the parallel execution branch (**** yea!)
