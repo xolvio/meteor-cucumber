@@ -256,6 +256,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return args;
     }
 
+    if (process.env.VELOCITY_CI) {
+      args.push('--screenshotsOnError=true');
+    }
+
     args.push('--screenshotsPath=' + _getScreenshotsDir());
 
     if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
