@@ -1,3 +1,9 @@
+#0.11.0
+
+* Updated to Chimp 0.10.0 (includes Webdriver 3.0)
+* Fixes multiple selenium server starting issues
+* Chrome is now the default browser
+
 #0.10.0
 
 * Fixes issue where Chrome takes the focus when screenshots for errors are taken (#142)
