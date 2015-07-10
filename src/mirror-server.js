@@ -29,7 +29,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   var _velocityConnection,
       _velocityTestFiles,
       _chimpProc,
-      _serverPort,
+      _chimpServerPort,
       _runningParallelTest;
 
   Meteor.startup(_startChimp);
@@ -178,14 +178,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return;
     }
 
-
-    freeport(Meteor.bindEnvironment(function(err, port) {
-      _serverPort = port;
+    var startChimpOnPort = function (err, port) {
+      _chimpServerPort = port;
 
       DEBUG && console.log('[xolvio:cucumber] Starting Chimp');
       _chimpProc = new sanjo.LongRunningChildProcess('Chimp_' + _getServerPort());
       if (_chimpProc.isRunning()) {
-        DEBUG && console.log('[xolvio:cucumber] Chimp is already running in server mode');
+        DEBUG && console.log('[xolvio:cucumber] Chimp is already running in server mode. Initting');
+        _init();
         return;
       }
 
@@ -217,12 +217,19 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       DEBUG && console.log('[xolvio:cucumber] Chimp process forked with pid', _chimpProc.getPid());
 
-    }))
+    };
+
+    if (!!process.env.CUCUMBER_NODES) {
+      freeport(Meteor.bindEnvironment(startChimpOnPort))
+    } else {
+      var serverPort = process.env.CUCUMBER_SERVER_PORT ? process.env.CUCUMBER_SERVER_PORT : 8866;
+      startChimpOnPort(null, serverPort);
+    }
 
   }
 
   function _getServerPort () {
-      return _serverPort;
+    return _chimpServerPort;
   }
 
   function _getScreenshotsDir () {
