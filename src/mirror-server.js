@@ -6,14 +6,15 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   'use strict';
 
-  var path = Npm.require('path'),
-      fs = Npm.require('fs-extra'),
+  var path     = Npm.require('path'),
+      fs       = Npm.require('fs-extra'),
       freeport = Npm.require('freeport');
 
   // this library extends the string prototype
   Npm.require('colors');
 
   var FRAMEWORK_NAME = 'cucumber';
+  var WATCH_TAG = '@dev';
   var BINARY = process.env.CHIMP_PATH || Npm.require('chimp').bin;
   if (
     process.env.NODE_ENV !== 'development' || !process.env.IS_MIRROR ||
@@ -44,7 +45,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   function _findAndRun () {
     DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
     var findAndRun = function () {
-      var feature =  _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
+      var feature = _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       if (feature) {
         _runningParallelTest = true;
         _run(feature, findAndRun);
@@ -109,14 +110,38 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
       var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
-      var results = JSON.parse(response.content);
+
+      var results = response.data;
+
+      if (results.message) {
+
+        //_finishWithError({
+
+        _velocityConnection.call('velocity/reports/submit', {
+
+        name: 'Unhandled Promise Rejection',
+          framework: FRAMEWORK_NAME,
+          result: 'failed',
+          failureMessage: 'Did you forget to add ".catch" to a promise?',
+          failureType : results.message,
+          failureStackTrace : results.stack
+        });
+
+      }
+
       if (results.length === 0) {
         console.log('[xolvio:cucumber] No features found. Be sure to annotate scenarios'.yellow,
-          'you want to run in watch mode with the'.yellow, '@dev'.cyan, 'tag'.yellow);
+          'you want to run in watch mode with the'.yellow, WATCH_TAG.cyan, 'tag'.yellow);
+        _velocityConnection.call('velocity/reports/submit', {
+          name: WATCH_TAG + ' not detected',
+          framework: FRAMEWORK_NAME,
+          ancestors: ['No specs were run'],
+          result: 'passed'
+        });
       }
       _processFeatures(results);
     } catch (e) {
-      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
+      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, e);
       _finishWithError();
       return;
     }
@@ -134,7 +159,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       _processFeatures(results);
     }
     catch (e) {
-      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort(), 'Try rerunning'.red);
+      console.error('[xolvio:cucumber] Bad response from Chimp server.'.red, 'port: '.red, _getServerPort());
       _error = true;
     }
 
@@ -153,18 +178,20 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     cb && cb();
   }
 
-  function _finishWithError() {
+  function _finishWithError (report) {
     // attempt to kill any current runs and tell velocity we failed
 
     try {
       HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
     } catch (e) {
     }
-    _velocityConnection.call('velocity/reports/submit', {
-      name: 'Chimp Server Error',
-      framework: FRAMEWORK_NAME,
-      result: 'failed'
-    });
+
+    report = report || {
+        name: 'An error occurred. Check the logs for more information.',
+        framework: FRAMEWORK_NAME,
+        result: 'failed'
+      };
+    _velocityConnection.call('velocity/reports/submit', report);
     _velocityConnection.call('velocity/reports/completed', {framework: FRAMEWORK_NAME});
   }
 
@@ -276,7 +303,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     if (process.env.CUCUMBER_TAGS) {
       args.push('--tags=' + process.env.CUCUMBER_TAGS);
     } else if (!process.env.VELOCITY_CI) {
-      args.push('--tags=@dev');
+      args.push('--tags=' + WATCH_TAG);
     } else {
       args.push('--tags=~@ignore');
     }

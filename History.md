@@ -1,3 +1,10 @@
+#0.11.1
+
+* Updated to Chimp 0.10.1 which detects unhandled promise rejections and fixes 'chimp server' issue
+* Results from bad chimp runs are now shown in the reporter
+* Fix for hanging pulsating dot for specs that don't pass / are pending
+* Improved logging
+
 #0.11.0
 
 * Updated to Chimp 0.10.0 (includes Webdriver 3.0)
