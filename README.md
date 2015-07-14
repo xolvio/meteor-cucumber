@@ -1,5 +1,4 @@
-###| [Documentation](http://chimp.readme.io/docs/meteor-cucumber) |
-
+### [Read the Documentation](http://chimp.readme.io/docs/meteor-cucumber)
 
 ## Installation
 ```sh
