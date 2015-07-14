@@ -1,5 +1,4 @@
-## About
-This package gives you Cucumber Velocity framework so you can do BDD with Meteor.
+This package allows you to do BDD in Meteor using Cucumber and Velocity.
 
 ## Installation
 ```sh
