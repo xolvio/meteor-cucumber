@@ -1,11 +1,13 @@
-### [Read the Documentation](http://chimp.readme.io/docs/meteor-cucumber)
+## About
+This package gives you Cucumber Velocity framework so you can do BDD with Meteor.
 
 ## Installation
 ```sh
 meteor add xolvio:cucumber
 ```
 
-This package gives you Cucumber Velocity framework so you can do BDD with Meteor.
+## Documentation
+You can [read the documentation here](http://chimp.readme.io/docs/meteor-cucumber).
 
 #Get the Book
 To learn more about testing with Meteor, consider purchasing our book [The Meteor Testing Manual](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber).
