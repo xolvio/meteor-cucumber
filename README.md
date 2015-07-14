@@ -1,4 +1,10 @@
-[![Chimp by Xolv.io](http://chimpjs.com/images/logo.svg)](http://chimpjs.com/) 
+###| [Documentation](http://chimp.readme.io/docs/meteor-cucumber) |
+
+
+## Installation
+```sh
+meteor add xolvio:cucumber
+```
 
 This package gives you Cucumber Velocity framework so you can do BDD with Meteor.
 
@@ -8,11 +14,3 @@ To learn more about testing with Meteor, consider purchasing our book [The Meteo
 [![](http://www.meteortesting.com/img/tmtm.gif)](http://www.meteortesting.com/?utm_source=Cucumber&utm_medium=banner&utm_campaign=Cucumber)
 
 Your support helps us continue our work on Velocity and related frameworks.
-
-###| [Documentation](http://chimp.readme.io/docs/meteor-cucumber) |
-
-
-## Installation
-```sh
-meteor add xolvio:cucumber
-```
