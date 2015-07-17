@@ -1,3 +1,8 @@
+#0.12.0
+
+* You can now run all specs from the HTML reporter with one button to get feedback over the whole suite
+* Increased de-bounce window for multiple-client rerun issue
+
 #0.11.1
 
 * Updated to Chimp 0.10.1 which detects unhandled promise rejections and fixes 'chimp server' issue

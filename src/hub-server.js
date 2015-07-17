@@ -42,6 +42,16 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
   }
 
+  Meteor.methods({
+    'cucumber/run': function () {
+      this.unblock();
+      var mirror = DDP.connect(VelocityMirrors.findOne({framework: 'cucumber'}).host)
+      mirror.call('runAll', function () {
+        mirror.disconnect();
+      });
+    }
+  });
+
   Meteor.startup(function () {
     Meteor.call('velocity/mirrors/request', {
       framework: FRAMEWORK_NAME,
@@ -66,7 +76,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (!!process.env.CUCUMBER_NODES) {
 
-      var debouncedRun = _.debounce(Meteor.bindEnvironment(_run), 300);
+      var debouncedRun = _.debounce(Meteor.bindEnvironment(_run), 600);
       VelocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observeChanges({
         added: debouncedRun,
         removed: debouncedRun,

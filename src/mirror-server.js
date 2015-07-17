@@ -35,15 +35,24 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
   Meteor.startup(_startChimp);
 
+
+
   Meteor.methods({
     handshake: function () {
+      this.unblock();
       DEBUG && console.log('[xolvio:cucumber] Received handshake from Chimp.');
       _init();
+    },
+    runAll: function () {
+      this.unblock();
+      DEBUG && console.log('[xolvio:cucumber] Running all specs.');
+      _runSingleExecutionMode(true);
     }
   });
 
   function _findAndRun () {
     DEBUG && console.log('[xolvio:cucumber] Find and run triggered', arguments);
+
     var findAndRun = function () {
       var feature = _velocityConnection.call('velocity/returnTODOTestAndMarkItAsDOING', {framework: FRAMEWORK_NAME});
       if (feature) {
@@ -73,17 +82,21 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     _velocityTestFiles = new Mongo.Collection('velocityTestFiles', {
       connection: _velocityConnection
     });
+    var cursor = _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME});
 
     _velocityConnection.onReconnect = function () {
       DEBUG && console.log('[xolvio:cucumber] Connected to hub.');
-      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 1000);
-      _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME}).observe({
+      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 600);
+      cursor.observe({
         added: debouncedRun,
         removed: debouncedRun,
         changed: debouncedRun
       });
 
-      process.on('SIGUSR2', Meteor.bindEnvironment(debouncedRun));
+      process.on('SIGUSR2', Meteor.bindEnvironment(function () {
+        DEBUG && console.log('[xolvio:cucumber] SIGUSR2 signal seen');
+        debouncedRun.apply(this, arguments);
+      }));
       process.on('message', Meteor.bindEnvironment(function (message) {
         DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
         if (message.refresh && message.refresh === 'client') {
@@ -102,29 +115,30 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
   }
 
-  function _runSingleExecutionMode () {
+  function _runSingleExecutionMode (runAll) {
     console.log('[xolvio:cucumber] Cucumber is running'.yellow);
     _velocityConnection.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
 
     try {
       HTTP.get('http://localhost:' + _getServerPort() + '/interrupt');
 
-      var response = HTTP.get('http://localhost:' + _getServerPort() + '/run');
+
+      var endPoint = runAll ? '/runAll' : '/run';
+
+      var response = HTTP.get('http://localhost:' + _getServerPort() + endPoint);
 
       var results = response.data;
 
       if (results.message) {
 
-        //_finishWithError({
-
         _velocityConnection.call('velocity/reports/submit', {
 
-        name: 'Unhandled Promise Rejection',
+          name: 'Unhandled Promise Rejection',
           framework: FRAMEWORK_NAME,
           result: 'failed',
           failureMessage: 'Did you forget to add ".catch" to a promise?',
-          failureType : results.message,
-          failureStackTrace : results.stack
+          failureType: results.message,
+          failureStackTrace: results.stack
         });
 
       }
