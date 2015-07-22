@@ -1,3 +1,10 @@
+#0.12.1
+
+* Upgraded to Chimp 0.12.0 which gives the following:
+  * Result reporting to Simian.io
+  * Cleans up logs
+  * Uses NPM of the main running process
+
 #0.12.0
 
 * You can now run all specs from the HTML reporter with one button to get feedback over the whole suite

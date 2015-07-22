@@ -5,13 +5,13 @@
   Package.describe({
     name: 'xolvio:cucumber',
     summary: 'CucumberJS for Velocity',
-    version: '0.12.0',
+    version: '0.12.1',
     git: 'https://github.com/xolvio/meteor-cucumber.git',
     debugOnly: true
   });
 
   Npm.depends({
-    'chimp': '0.11.0',
+    'chimp': '0.12.0',
     'colors': '1.0.3',
     'fs-extra': '0.18.0',
     "tail-forever": "0.3.11",
