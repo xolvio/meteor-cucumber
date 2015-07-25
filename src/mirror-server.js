@@ -326,6 +326,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--format=' + process.env.CUCUMBER_FORMAT);
     }
 
+    if (process.env.SIMIAN_ACCESS_TOKEN) {
+      args.push('--simianAccessToken=' + process.env.SIMIAN_ACCESS_TOKEN);
+    }
+
     if (process.env.CUCUMBER_JSON_OUTPUT) {
       args.push('--jsonOutput=' + process.env.CUCUMBER_JSON_OUTPUT);
     }
@@ -360,6 +364,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (process.env.HUB_VERSION) {
       args.push('--version=' + process.env.HUB_VERSION);
+    }
+
+    if (process.env.CHIMP_OFFLINE) {
+      args.push('--offline');
     }
 
     return args;
