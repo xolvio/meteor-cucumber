@@ -122,7 +122,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return;
     }
 
-    Meteor.call('velocity/reports/reset');
+    Meteor.call('velocity/reports/reset', {framework: FRAMEWORK_NAME});
 
     // set all file statuses so mirrors can start working on files
     VelocityTestFiles.update(
