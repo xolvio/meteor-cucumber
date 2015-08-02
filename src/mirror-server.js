@@ -284,6 +284,13 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     var args = [];
 
+    if (process.env.CHIMP_NODE_OPTIONS) {
+      args.push(process.env.CHIMP_NODE_OPTIONS);
+    } else if (process.env.CHIMP_DEBUG) {
+      args.push('--debug');
+      args.push('--debug-brk');
+    }
+
     args.push(BINARY);
 
     args.push('-r');
