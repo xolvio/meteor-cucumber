@@ -1,3 +1,8 @@
+#0.12.4
+
+* Added CHIMP_DEBUG to allow debugging of the Chimp and Cucumber child processes
+* Added CHIMP_NODE_OPTIONS for finer control over the node process that starts chimp
+
 #0.12.3
 
 * Updated to chimp v0.12.2
