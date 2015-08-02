@@ -18,9 +18,10 @@
 
     this.Then(/^I should see the heading "([^"]*)"$/, function (expectedTitle, callback) {
       // you can use chai-as-promised in step definitions also
-      return this.browser.
-        waitForVisible('h1'). // WebdriverIO chain-able promise magic
-        getText('h1').should.become(expectedTitle);
+      callback.pending();
+      //return this.browser.
+      //  waitForVisible('h1'). // WebdriverIO chain-able promise magic
+      //  getText('h1').should.become(expectedTitle);
     });
 
   };

@@ -1,3 +1,16 @@
+#0.12.3
+
+* Updated to chimp v0.12.2
+* Updated HTML-reporter
+* Added offline switch to Chimp
+* Added Simian reporting delegate to Chimp
+* Fixed sample tests to use new WebdriverIO promises
+* Cucumber now only resets its own reports
+
+#0.12.2
+
+* Exposing the SIMIAN_ACCESS_TOKEN flag for chimp
+
 #0.12.1
 
 * Upgraded to Chimp 0.12.0 which gives the following:

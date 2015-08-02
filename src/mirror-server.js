@@ -292,6 +292,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     args.push('--ddp=' + process.env.ROOT_URL);
     args.push('--log=error');
 
+
+    // TODO only if local / xolvio:reporter is detected
+    args.push('--simianResultEndPoint=' + process.env.PARENT_URL.substring('http://'.length) + 'xolvio/reporter/results');
+    args.push('--simianAccessToken=' + 'local');
+
     if (DEBUG || process.env.DEBUG) {
       args.push('--debug');
     }
