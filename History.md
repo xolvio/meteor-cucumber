@@ -1,7 +1,10 @@
-#0.12.4
+#0.13.0
 
 * Added CHIMP_DEBUG to allow debugging of the Chimp and Cucumber child processes
 * Added CHIMP_NODE_OPTIONS for finer control over the node process that starts chimp
+* Added DEBUG_CUCUMBER and DEBUG_BRK_CUCUMBER that allows you to debug steps
+* Pending tests are now considered a failure
+* Improved logging
 
 #0.12.3
 
