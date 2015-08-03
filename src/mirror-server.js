@@ -297,7 +297,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     if (process.env.CHIMP_NODE_OPTIONS) {
       args.push(process.env.CHIMP_NODE_OPTIONS);
     } else if (process.env.CHIMP_DEBUG) {
-      args.push('--debug');
       args.push('--debug-brk');
     }
 
@@ -390,6 +389,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (process.env.CHIMP_OFFLINE) {
       args.push('--offline');
+    }
+
+    if (process.env.DEBUG_CUCUMBER) {
+      args.push('--debugCucumber=' + process.env.DEBUG_CUCUMBER);
+    }
+
+    if (process.env.DEBUG_BRK_CUCUMBER) {
+      args.push('--debugBrkCucumber=' + process.env.DEBUG_BRK_CUCUMBER);
     }
 
     return args;
