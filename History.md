@@ -1,3 +1,7 @@
+#0.13.1
+
+* Uses Chimp update which contains logging improvements and bug fix for runAll button
+
 #0.13.0
 
 * Added CHIMP_DEBUG to allow debugging of the Chimp and Cucumber child processes
