@@ -129,6 +129,16 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       var results = response.data;
 
+      if (!results) {
+        console.error('[xolvio:cucumber] Bad response from Chimp server.'.red);
+        console.error(response);
+        _finishWithError();
+        return;
+      }
+
+      DEBUG && console.log('[xolvio:cucumber] Results from Chimp:');
+      DEBUG && console.log(results);
+
       if (results.message) {
 
         _velocityConnection.call('velocity/reports/submit', {
@@ -301,8 +311,8 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
 
     // TODO only if local / xolvio:reporter is detected
-    args.push('--simianResultEndPoint=' + process.env.PARENT_URL.substring('http://'.length) + 'xolvio/reporter/results');
-    args.push('--simianAccessToken=' + 'local');
+    //args.push('--simianResultEndPoint=' + process.env.PARENT_URL.substring('http://'.length) + 'xolvio/reporter/results');
+    //args.push('--simianAccessToken=' + 'local');
 
     if (DEBUG || process.env.DEBUG) {
       args.push('--debug');
@@ -438,6 +448,11 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     if (step.result.status === 'skipped') {
       report.result = 'failed';
       report.failureStackTrace = 'This step was skipped';
+    }
+
+    if (step.result.status === 'pending') {
+      report.result = 'failed';
+      report.failureStackTrace = 'This step is pending';
     }
 
     // skip before/after if they have no errors
