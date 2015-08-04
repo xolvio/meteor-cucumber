@@ -1,3 +1,11 @@
+#0.13.3
+
+* Improved logging in Chimp
+
+#0.13.2
+
+* Using env-set as a temporary workaround to issue in sanjo:long-running-child-process
+
 #0.13.1
 
 * Uses Chimp update which contains logging improvements and bug fix for runAll button

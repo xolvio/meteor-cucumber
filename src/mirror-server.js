@@ -141,14 +141,17 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
       if (results.message) {
 
+
+        var split = results.message.split('\n');
+
         _velocityConnection.call('velocity/reports/submit', {
 
-          name: 'Unhandled Promise Rejection',
+          name: results.name,
           framework: FRAMEWORK_NAME,
           result: 'failed',
-          failureMessage: 'Did you forget to add ".catch" to a promise?',
+          failureMessage: split[0],
           failureType: results.message,
-          failureStackTrace: results.stack
+          failureStackTrace: results.stack || split[1] || ''
         });
 
       }
