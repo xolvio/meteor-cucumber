@@ -51,5 +51,5 @@ velocity:shim@0.1.0
 velocity:source-map-support@0.3.2_1
 webapp@1.2.0
 webapp-hashing@1.0.3
-xolvio:cucumber@0.13.3
+xolvio:cucumber@0.13.7
 xolvio:env-set@0.0.2

@@ -1,3 +1,10 @@
+#0.13.7
+
+* Updating to chimp 0.12.9
+
+#0.13.4-6
+* Broken connection duff releases
+
 #0.13.3
 
 * Improved logging in Chimp
