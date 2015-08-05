@@ -1,3 +1,9 @@
+#0.14.0
+
+* Synchronous testing (BREAKING CHANGE!)
+  Read the [migration guide](https://velocity.readme.io/docs/cucumber-migrate-to-synchronous-style)
+  to learn how to migrate your existing tests.
+
 #0.13.7
 
 * Updating to chimp 0.12.9
