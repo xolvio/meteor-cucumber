@@ -24,10 +24,10 @@
     this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle) {
       // you can use chai-as-promised in step definitions also
       return this.client.
-        waitForVisible('body *'). // WebdriverIO chain-able promise magic
+        waitForExist('title'). // WebdriverIO chain-able promise magic
         getTitle().should.become(expectedTitle);
     });
 
   };
 
-})(); 
+})();
