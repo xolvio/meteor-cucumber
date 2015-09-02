@@ -11,7 +11,7 @@
   });
 
   Npm.depends({
-    'chimp': '0.14.1',
+    'chimp': '0.14.2',
     'colors': '1.0.3',
     'fs-extra': '0.18.0',
     "tail-forever": "0.3.11",
