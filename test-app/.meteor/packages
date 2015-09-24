@@ -4,5 +4,21 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
-xolvio:cucumber
+xolvio:cucumber@0.14.0-rc.5
+velocity:core@0.10.0-rc.4
+velocity:html-reporter@0.9.0-rc.4
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+random
+ejson
+spacebars
+check
+coffeescript

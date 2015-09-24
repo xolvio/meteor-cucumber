@@ -1,22 +1,16 @@
-Feature: Author a Website2
+Feature: Author a Website
 
   As a web page author
   I want to set the heading of my page
   So that I can create the simplest website in the world
 
-  Scenario: Author using the Meteor settings file12
-    Given I have authored the site title as "My Test Title"
+  @focus
+  Scenario: Author using the Meteor settings file1
+    Given I have authored the site title as "Meteor Cucumber by Xolv.io"
     When  I navigate to "/"
-    Then  I should see the heading "My Test Title"
+    Then  I should see the heading "Intentional Failure"
 
-  @dev
-  Scenario: Author using the Meteor settings file22
-    Given I have authored the site title as "My Test Title"
+  Scenario: Author using the Meteor settings file2
+    Given I have authored the site title as "Meteor Cucumber by Xolv.io"
     When  I navigate to "/"
-    Then  I should see the heading "My Test Title"
-
-  @ignore
-  Scenario: Author using the Meteor settings file32
-    Given I have authored the site title as "My Test Title"
-    When  I navigate to "/"
-    Then  I should see the heading "My Test Title"
+    Then  I should see the heading "Meteor Cucumber by Xolv.io"

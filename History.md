@@ -1,3 +1,23 @@
+#0.14.1
+
+* Updating to chimp 0.15.4
+* Reinstates chimp-widgets
+
+#0.14.0
+
+* Meteor 1.2 compatible
+* Updating to chimp 0.15.3
+* Synchronous WebdriverIO (breaking change)
+* Jasmine assertions by default instead of chai (breaking change)
+* Global `pending()` and `fail()` methods available in steps
+* Screenshots can be attached in the JSON report
+* Screenshots name match the step that produced them
+* Screenshots can be captured for all steps (not just failing ones)
+
+#0.13.8
+
+* Updating to chimp 0.12.10
+
 #0.13.7
 
 * Updating to chimp 0.12.9

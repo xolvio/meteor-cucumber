@@ -14,7 +14,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   Npm.require('colors');
 
   var FRAMEWORK_NAME = 'cucumber';
-  var WATCH_TAG = '@dev';
+  var WATCH_TAG = '@dev,@watch,@focus';
   var BINARY = process.env.CHIMP_PATH || Npm.require('chimp').bin;
   if (
     process.env.NODE_ENV !== 'development' || !process.env.IS_MIRROR ||
@@ -320,6 +320,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--debug');
     }
 
+    if (process.env.CHAI) {
+      args.push('--chai');
+    }
+
+    if (process.env.CHIMP_ASYNC) {
+      args.push('--sync=false');
+    }
+
     if (process.env.CHIMP_OPTIONS) {
       var chimpOptions = process.env.CHIMP_OPTIONS.split(' ');
       while (chimpOptions.length != 0) {
@@ -328,11 +336,18 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       return args;
     }
 
-    if (process.env.VELOCITY_CI) {
+    if (process.env.SCREENSHOTS_ON_ERROR || process.env.VELOCITY_CI) {
       args.push('--screenshotsOnError=true');
     }
 
-    args.push('--screenshotsPath=' + _getScreenshotsDir());
+    if (process.env.SAVE_SCREENSHOTS || process.env.VELOCITY_CI) {
+      args.push('--saveScreenshots=true');
+      args.push('--screenshotsPath=' + _getScreenshotsDir());
+    }
+
+    if (process.env.CAPTURE_ALL_STEP_SCREENSHOTS) {
+      args.push('--captureAllStepScreenshots=true');
+    }
 
     if (process.env.CUCUMBER_COFFEE_SNIPPETS) {
       args.push('--coffee');

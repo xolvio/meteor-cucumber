@@ -3,10 +3,10 @@
   'use strict';
 
   Meteor.methods({
-    'updateTitle' : function(title) {
+    'updateTitle': function (title) {
       Meteor.settings.pageTitle = title;
     },
-    'getTitle' : function() {
+    'getTitle': function () {
       return Meteor.settings.pageTitle;
     }
   });
