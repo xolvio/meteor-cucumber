@@ -328,6 +328,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
       args.push('--sync=false');
     }
 
+    if (process.env.CHROME_BIN) {
+      args.push('--chromeBin=' + process.env.CHROME_BIN);
+    }
+
     if (process.env.CHIMP_OPTIONS) {
       var chimpOptions = process.env.CHIMP_OPTIONS.split(' ');
       while (chimpOptions.length != 0) {

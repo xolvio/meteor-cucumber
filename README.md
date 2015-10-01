@@ -8,7 +8,7 @@ meteor add xolvio:cucumber
 ```
 
 ## Documentation
-You can [read the full documentation here](http://chimp.readme.io/docs/meteor-cucumber) on the beautiful Readme.io.
+You can [read the full documentation here](https://chimp.readme.io/docs/getting-started-with-meteor-cucumber) on the beautiful Readme.io.
 
 ## Prerequisites
 Make sure you have the following installed:
