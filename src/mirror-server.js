@@ -309,7 +309,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     args.push(path.join(process.env.VELOCITY_MAIN_APP_PATH, 'tests', 'cucumber', 'features'));
     args.push('--snippets');
     args.push('--ddp=' + process.env.ROOT_URL);
-    args.push('--log=error');
+    args.push('--log=' + !!process.env.VELOCITY_DEBUG ? 'verbose' : 'error');
 
 
     // TODO only if local / xolvio:reporter is detected
