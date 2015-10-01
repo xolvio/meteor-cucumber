@@ -1,17 +1,8 @@
 ## Release
 
-You need to update NPM before you can release:
+First `meteor publish`.
 
-```sh
-cd ~/.meteor/packages/meteor-tool/1.1.4/mt-*/dev_bundle/lib
-../bin/npm install npm
-```
-
-(TODO: Find out the command for Windows)
-
-Then `meteor publish`.
-
-You need to build the package on the Mac OS X and Linux 64bit build machine.
+Then you need to build the package on all architectures.
 
 ```sh
 meteor admin get-machine os.osx.x86_64 --minutes 10
@@ -20,4 +11,6 @@ meteor admin get-machine os.linux.x86_32 --minutes 10
 meteor admin get-machine os.windows.x86_32 --minutes 10
 ```
 
-You need to also update npm on the build machine before you execute the build command.
+```sh
+meteor publish-for-arch xolvio:cucumber@X.X.X
+```
