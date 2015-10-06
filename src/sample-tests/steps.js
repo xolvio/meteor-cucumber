@@ -1,33 +1,24 @@
-(function () {
+// You can include npm dependencies for support files in tests/cucumber/package.json
+var _ = require('underscore');
 
-  'use strict';
+module.exports = function () {
 
-  // You can include npm dependencies for support files in tests/cucumber/package.json
-  var _ = require('underscore');
+  // You can use normal require here, cucumber is NOT run in a Meteor context (by design)
+  var url = require('url');
 
-  module.exports = function () {
+  this.Given(/^I am a new user$/, function () {
+    server.call('reset'); // server is a connection to the mirror
+  });
 
-    // You can use normal require here, cucumber is NOT run in a Meteor context (by design)
-    var url = require('url');
+  this.When(/^I navigate to "([^"]*)"$/, function (relativePath) {
+    // process.env.ROOT_URL always points to the mirror
+    client.url(url.resolve(process.env.ROOT_URL, relativePath));
+  });
 
-    this.Given(/^I am a new user$/, function () {
-      // no callbacks! DDP has been promisified so you can just return it
-      return this.server.call('reset'); // this.ddp is a connection to the mirror
-    });
+  this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle) {
+    // no callbacks, no promises, just simple synchronous code!
+    client.waitForExist('title');
+    expect(client.getTitle()).toEqual(expectedTitle); // using Jasmine's assertion library
+  });
 
-    this.When(/^I navigate to "([^"]*)"$/, function (relativePath) {
-      // WebdriverIO supports Promises/A+ out the box, so you can return that too
-      return this.client. // this.browser is a pre-configured WebdriverIO + PhantomJS instance
-        url(url.resolve(process.env.ROOT_URL, relativePath)); // process.env.ROOT_URL always points to the mirror
-    });
-
-    this.Then(/^I should see the title "([^"]*)"$/, function (expectedTitle) {
-      // you can use chai-as-promised in step definitions also
-      return this.client.
-        waitForExist('title'). // WebdriverIO chain-able promise magic
-        getTitle().should.become(expectedTitle);
-    });
-
-  };
-
-})();
+};
