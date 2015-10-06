@@ -1,7 +1,21 @@
+# 0.14.9
+
+* Adds a CI "once" mode
+
+# 0.14.8
+
+* Updating to chimp 0.17.1
+
+# 0.14.7
+
+* Updates sample specs to synchronous mode
+* Updating to chimp 0.17.0
+  * Adds CHROME_ARGS option
+
 # 0.14.2
 
-## Updating to chimp 0.16.0
-* Adds CHROME_BIN option
+* Updating to chimp 0.16.0
+  * Adds CHROME_BIN option
 
 # 0.14.1
 
