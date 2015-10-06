@@ -1,3 +1,7 @@
+# 0.14.10
+
+* Updates Velocity core
+
 # 0.14.9
 
 * Adds a CI "once" mode
