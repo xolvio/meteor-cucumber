@@ -84,23 +84,25 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     });
     var cursor = _velocityTestFiles.find({targetFramework: FRAMEWORK_NAME});
 
+    var rerunStrategy = process.env.VELOCITY_CI ? _.once : _.debounce;
+
     _velocityConnection.onReconnect = function () {
       DEBUG && console.log('[xolvio:cucumber] Connected to hub.');
-      var debouncedRun = _.debounce(Meteor.bindEnvironment(_findAndRun), 600);
+      var rerun = rerunStrategy(Meteor.bindEnvironment(_findAndRun), 600);
       cursor.observe({
-        added: debouncedRun,
-        removed: debouncedRun,
-        changed: debouncedRun
+        added: rerun,
+        removed: rerun,
+        changed: rerun
       });
 
       process.on('SIGUSR2', Meteor.bindEnvironment(function () {
         DEBUG && console.log('[xolvio:cucumber] SIGUSR2 signal seen');
-        debouncedRun.apply(this, arguments);
+        rerun.apply(this, arguments);
       }));
       process.on('message', Meteor.bindEnvironment(function (message) {
         DEBUG && console.log('[xolvio:cucumber] Process message seen', message);
         if (message.refresh && message.refresh === 'client') {
-          debouncedRun();
+          rerun();
         }
       }));
 
@@ -330,6 +332,10 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
 
     if (process.env.CHROME_BIN) {
       args.push('--chromeBin=' + process.env.CHROME_BIN);
+    }
+
+    if (process.env.CHROME_ARGS) {
+      args.push('--chromeArgs=' + process.env.CHROME_ARGS);
     }
 
     if (process.env.CHIMP_OPTIONS) {
