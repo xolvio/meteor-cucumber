@@ -45,7 +45,7 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
   Meteor.methods({
     'cucumber/run': function () {
       this.unblock();
-      var mirror = DDP.connect(VelocityMirrors.findOne({framework: 'cucumber'}).host)
+      var mirror = DDP.connect(VelocityMirrors.findOne({framework: 'cucumber'}).host);
       mirror.call('runAll', function () {
         mirror.disconnect();
       });
