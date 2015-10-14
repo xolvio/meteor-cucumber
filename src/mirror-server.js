@@ -259,10 +259,6 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
         env: env
       };
 
-      args.push('--server');
-
-      args.push('--serverPort=' + _getServerPort());
-
       DEBUG && console.log('[xolvio:cucumber] Starting Chimp with', BINARY, args, spawnOptions);
 
       _chimpProc.spawn({
@@ -306,6 +302,14 @@ DEBUG = !!process.env.VELOCITY_DEBUG;
     }
 
     args.push(BINARY);
+
+    // Individual features files must be the first arguments for CHIMP
+    if (process.env.CUCUMBER_FEATURES) {
+      args.push(process.env.CUCUMBER_FEATURES);
+    }
+
+    args.push('--server');
+    args.push('--serverPort=' + _getServerPort());
 
     args.push('-r');
     args.push(path.join(process.env.VELOCITY_MAIN_APP_PATH, 'tests', 'cucumber', 'features'));

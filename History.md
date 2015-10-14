@@ -1,3 +1,8 @@
+# 0.14.11
+
+* Updates Chimp to 0.18.0
+* Adds multiple feature running
+
 # 0.14.10
 
 * Updates Velocity core
